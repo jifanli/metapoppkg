@@ -1,0 +1,86 @@
+
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> 
+> library(metapoppkg)
+Loading required package: pomp
+
+Welcome to pomp!
+
+As of version 4.6, no user-visible pomp function has a name that
+includes a dot ('.'). Function names have been changed to replace the
+dot with an underscore ('_'). For more information, see the pomp blog:
+https://kingaa.github.io/pomp/blog.html.
+
+Loading required package: spatPomp
+Loading required package: ggplot2
+Loading required package: ggnewscale
+Loading required package: rlang
+> i <- 1 # set to 2 for larger test, 3 for big test
+> 
+> set.seed(99)
+> p <- li20(U=switch(i,5,20,373))
+> s <- simulate(p)
+> obs(s)[1:3,1:5]
+        date
+name     [,1] [,2] [,3] [,4] [,5]
+  cases1    0    2    3    8   10
+  cases2    0    0    0    0    0
+  cases3    0    0    0    0    0
+> 
+> theta <- coef(p)
+> 
+> theta_trans <- partrans(p,theta,dir="toEst")
+> theta_trans
+  alpha_be1   alpha_be2   alpha_be3   alpha_be4   alpha_be5    Beta_be1 
+-1.94591015 -1.94591015 -1.94591015 -1.94591015 -1.94591015  0.88420242 
+   Beta_be2    Beta_be3    Beta_be4    Beta_be5   alpha_af1   alpha_af2 
+ 0.88420242  0.88420242  0.88420242  0.88420242  0.83739679  0.83739679 
+  alpha_af3   alpha_af4   alpha_af5    Beta_af1    Beta_af2    Beta_af3 
+ 0.83739679  0.83739679  0.83739679 -2.03688193 -2.03688193 -2.03688193 
+   Beta_af4    Beta_af5      mu_be1      mu_be2      mu_be3      mu_be4 
+-2.03688193 -2.03688193 -0.25131443 -0.25131443 -0.25131443 -0.25131443 
+     mu_be5       Z_be1       Z_be2       Z_be3       Z_be4       Z_be5 
+-0.25131443  0.25470139  0.25470139  0.25470139  0.25470139  0.25470139 
+      D_be1       D_be2       D_be3       D_be4       D_be5      mu_af1 
+-0.04000533 -0.04000533 -0.04000533 -0.04000533 -0.04000533 -0.90755705 
+     mu_af2      mu_af3      mu_af4      mu_af5       Z_af1       Z_af2 
+-0.90755705 -0.90755705 -0.90755705 -0.90755705 -0.10676798 -0.10676798 
+      Z_af3       Z_af4       Z_af5       D_af1       D_af2       D_af3 
+-0.10676798 -0.10676798 -0.10676798 -0.25470139 -0.25470139 -0.25470139 
+      D_af4       D_af5      theta1      theta2      theta3      theta4 
+-0.25470139 -0.25470139 -0.08004271 -0.08004271 -0.08004271 -0.08004271 
+     theta5        tau1        tau2        tau3        tau4        tau5 
+-0.08004271  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000 
+     Td_be1      Td_be2      Td_be3      Td_be4      Td_be5      Td_af1 
+ 1.38629436  1.38629436  1.38629436  1.38629436  1.38629436 -1.38629436 
+     Td_af2      Td_af3      Td_af4      Td_af5   sigma_SE1   sigma_SE2 
+-1.38629436 -1.38629436 -1.38629436 -1.38629436 -2.19722458 -2.19722458 
+  sigma_SE3   sigma_SE4   sigma_SE5        E_01        E_02        E_03 
+-2.19722458 -2.19722458 -2.19722458  0.00000000  0.00000000  0.00000000 
+       E_04        E_05       Iu_01       Iu_02       Iu_03       Iu_04 
+ 0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000 
+      Iu_05 
+ 0.00000000 
+> 
+> b <- bpfilter(p,block_size=1,Np=switch(i,10,100,1000))
+> logLik(b)
+[1] -3020.716
+> 
+> 

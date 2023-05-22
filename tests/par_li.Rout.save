@@ -1,0 +1,103 @@
+
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> 
+> library(metapoppkg)
+Loading required package: pomp
+
+Welcome to pomp!
+
+As of version 4.6, no user-visible pomp function has a name that
+includes a dot ('.'). Function names have been changed to replace the
+dot with an underscore ('_'). For more information, see the pomp blog:
+https://kingaa.github.io/pomp/blog.html.
+
+Loading required package: spatPomp
+Loading required package: ggplot2
+Loading required package: ggnewscale
+Loading required package: rlang
+> 
+> par_li1 <- c(
++ alpha_be1 = 0.09389817,
++ Beta_be1  = 0.77943975,
++ mu_be1    = 0.96682356,
++ Z_be1     = 0.11650832,
++ D_be1     = 0.93467362,
++ Td_be1    = 0.80000000,
++ alpha_af1 = 0.46182906,
++ Beta_af1  = 0.13459503,
++ mu_af1    = 0.68640173,
++ Z_af1     = 0.04444878,
++ D_af1     = 0.12646338,
++ Td_af1    = 0.20000000,
++ theta1    = 0.89626861,
++ tau1      = 0.91718058,
++ sigma_SE1 = 0.10000000,
++ E_01      = 0.44362243,
++ Iu_01     = 0.98409838
++ )
+> par_nat <- par_li(par_li1,U=5,dir="from_li")
+> par_li2 <- par_li(par_nat,U=5,dir="to_li")
+> 
+> # see if transforms are inverse
+> any(abs(par_li1-par_li2)>1e-6)
+[1] FALSE
+> 
+> # another set of test parameters 
+> mle_test_params <- c(
++                      alpha_be=0.093898173,
++                      Beta_be=0.779439748,
++                      alpha_af=0.461829062,
++                      Beta_af=0.134595027,
++                      mu_be=0.966823556,
++                      Z_be=0.116508318,
++                      D_be=0.934673622,
++                      mu_af=0.686401734,
++                      Z_af=0.044448782,
++                      D_af=0.126463381,
++                      theta=0.89626861,
++                      tau=0.917180577,
++                      sigma_SE=0.1348371, # when dt=1/4, size_SE=0.550023483, sigma_SE should be 5*0.1348371
++                      Td_be=0.8,
++                      Td_af=0.2,
++                      E_0=0.44362243,
++                      Iu_0=0.984098384
++                    )
+> 
+> # Li et al MLE mapped onto unit scale (allegedly)
+> li_test_params <- c(
++                      alpha_be=0.122449,
++                      Beta_be=0.4571429,
++                      alpha_af=0.6836735,
++                      Beta_af=0.15,
++                      mu_be=0.4375,
++                      Z_be=0.5633333,
++                      D_be=0.49,
++                      mu_af=0.2875,
++                      Z_af=0.4733333,
++                      D_af=0.4366667,
++                      theta=0.48,
++                      tau=0.1,
++                      sigma_SE=0.1, 
++                      Td_be=0.8,
++                      Td_af=0.2,
++                      E_0=0.5,
++                      Iu_0=0.5
++                    )
+> 

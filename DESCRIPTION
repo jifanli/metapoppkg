@@ -1,0 +1,26 @@
+Package: metapoppkg
+Title: R Package for Metapop Article
+Version: 0.1.7
+Date: 2023-05-19
+Authors@R: c(
+  person("Jifan", "Li", email = "jifanli@umich.edu", role = c("cre","aut")),
+  person("Edward", "Ionides", email = "ionides@umich.edu",role = c("aut")),
+  person("Ning", "Ning", email = "patning@tamu.edu",role = c("aut")))
+Description: This package is a container for the data and functions that were 
+    used to write the article Metapopulation modeling and inference for 
+    scientific discovery.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 4.1),
+    pomp (>= 5.0),
+    spatPomp,
+    ggplot2,
+    ggnewscale,
+    rlang,
+    doParallel,
+    doRNG,
+    patchwork,
+    foreach
+RoxygenNote: 7.2.3

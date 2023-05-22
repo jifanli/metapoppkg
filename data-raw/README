@@ -1,0 +1,25 @@
+
+This directory converts the raw data
+from https://www.science.org/doi/full/10.1126/science.abb3221#supplementary-materials
+or, equivalently,
+https://github.com/SenPei-CU/COVID-19
+into the form presented in metapoppkg
+
+within metapoppkg, run
+source('data-raw/process.R')
+to construct the datasets in 'data/mobility.rda', 'data/population.rda', 'data/incidence.rda', 'data/coordinates.rda', 'data/population0.rda', 'data/v_by_g_day.rda'
+
+Various minor corrections have been made:
+
+1. Ezhou population is 1,079,353 (replacing 59500)
+https://en.wikipedia.org/wiki/Ezhou
+Ezhou is a prefecture-level city in eastern Hubei Province, China. As of the 2020 census, the city had a population of 1,079,353,
+
+2. Xintai is renamed Xingtai. The coordinates and population match the latter.
+https://en.wikipedia.org/wiki/Xingtai
+Xingtai, formerly known as Xingzhou and Shunde, is a prefecture-level city in southern Hebei province, People's Republic of China. It has a total area of 12,486 km² and administers 4 districts, 2 county-level cities and 12 counties. At the 2020 census, its population was 7,111,106 inhabitants.
+https://en.wikipedia.org/wiki/Xintai
+Xintai is a county-level city in the central part of Shandong province, People's Republic of China. It is the easternmost county-level division of the prefecture-level city of Tai'an and is located about 50 kilometres (31 mi) to the southeast of downtown Tai'an.
+
+3. Wujiaqushi is removed. It is essentially a duplicate of Wujiaqu, and the extra shi just means city.
+
