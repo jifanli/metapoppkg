@@ -2,7 +2,7 @@
 % Please edit documentation in R/li20.R
 \name{li20}
 \alias{li20}
-\title{Covid spatPomp generator v1}
+\title{Build spatPomp object for li20}
 \usage{
 li20(
   U = 373,

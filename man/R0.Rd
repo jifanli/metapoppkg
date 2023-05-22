@@ -20,12 +20,12 @@ for the model of Li et al
 }
 \examples{
 ## R0 for mle
-po_mle <- li20v3(U=5,version="MLEperiod3")
+po_mle <- li23(U=5,version="MLEperiod3")
 p_mle <- coef(po_mle)
 R0(p_mle,be=TRUE)
 R0(p_mle,be=FALSE)
 ## R0 for li20
-po_li <- li20v3(U=5,version="li20period3")
+po_li <- li23(U=5,version="li20period3")
 p_li <- coef(po_li)
 R0(p_li,be=TRUE)
 R0(p_li,be=FALSE)

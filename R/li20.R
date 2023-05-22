@@ -1,4 +1,4 @@
-#' Covid spatPomp generator v1
+#' Build spatPomp object for li20
 #'
 #' Generate a \sQuote{spatPomp} object for reproducing the results of Li et al.
 #'

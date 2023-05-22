@@ -2,15 +2,16 @@
 % Please edit documentation in R/plot_percentile.R
 \name{plot_percentile}
 \alias{plot_percentile}
-\title{Make 10, 50, 90 percentile plots for li20}
+\title{Make 10, 50, 90 percentile plots for li20 or li23}
 \usage{
 plot_percentile(
   U = 373,
   Nsim = 100,
   order = "population",
-  li20_version = "v5",
+  model = "li23",
   seed = 12315,
-  registerDoRNG = 3123465
+  registerDoRNG = 3123465,
+  params
 )
 }
 \arguments{
@@ -20,16 +21,18 @@ plot_percentile(
 
 \item{order}{the order of the units in the plot}
 
-\item{li20_version}{choose which version of the model will be used}
+\item{model}{choose which model will be used}
 
 \item{seed}{the seed used for simulations}
 
 \item{registerDoRNG}{the seed used to register the doRNG foreach backend}
+
+\item{params}{a named numeric vector or a matrix with rownames}
 }
 \value{
 a \code{ggplot} plot of class \sQuote{gg} and \sQuote{ggplot} visualizing
 the time series data over multiple spatial units via a tile-plot.
 }
 \description{
-This function makes spatiotemporal plots, with a 4-plot grid giving the 10, 50, 90 percentiles and a single simulation.
+This function makes spatiotemporal plots, with a 3-plot grid giving the 10, 50, 90 percentiles.
 }

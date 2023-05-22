@@ -1,7 +1,7 @@
 Package: metapoppkg
 Title: R Package for Metapop Article
-Version: 0.1.7
-Date: 2023-05-19
+Version: 0.1.8
+Date: 2023-05-22
 Authors@R: c(
   person("Jifan", "Li", email = "jifanli@umich.edu", role = c("cre","aut")),
   person("Edward", "Ionides", email = "ionides@umich.edu",role = c("aut")),

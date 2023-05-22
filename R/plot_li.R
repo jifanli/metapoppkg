@@ -1,6 +1,6 @@
-#' Plotting li20 data
+#' Plotting li20 or li23 data
 #'
-#' Visualize li20 data, set the higher case numbers to black and the lower ones to white, 
+#' Visualize li20 or li23 data, set the higher case numbers to black and the lower ones to white, 
 #' sort the units by population size. And set the color of Wuhan to blue, Shenyang to red.
 #'
 #' @param U number of the cities
@@ -16,7 +16,7 @@
 #' @export
 
 
-plot_li20 <- function(x, U=373, limit=4, order="population") {
+plot_li <- function(x, U=373, limit=4, order="population") {
   df <- as.data.frame(x)
   df[x@unit_obsnames] <- log10(df[x@unit_obsnames]+1)
   # change the order, sort by population

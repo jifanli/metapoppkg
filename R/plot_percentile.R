@@ -1,11 +1,11 @@
-#' Make 10, 50, 90 percentile plots for li20
+#' Make 10, 50, 90 percentile plots for li20 or li23
 #'
-#' This function makes spatiotemporal plots, with a 4-plot grid giving the 10, 50, 90 percentiles and a single simulation.
+#' This function makes spatiotemporal plots, with a 3-plot grid giving the 10, 50, 90 percentiles.
 #'
 #' @param U number of the cities
 #' @param Nsim number of simulations
 #' @param order the order of the units in the plot
-#' @param li20_version choose which version of the model will be used
+#' @param model choose which model will be used
 #' @param seed the seed used for simulations
 #' @param registerDoRNG the seed used to register the doRNG foreach backend
 #' @param params a named numeric vector or a matrix with rownames
@@ -23,14 +23,14 @@
 #'
 #' @export
 
-plot_percentile <- function(U = 373, Nsim=100, order="population", li20_version = "v5", seed = 12315, registerDoRNG = 3123465, params) {
+plot_percentile <- function(U = 373, Nsim=100, order="population", model = "li23", seed = 12315, registerDoRNG = 3123465, params) {
   cores <-  as.numeric(Sys.getenv('SLURM_NTASKS_PER_NODE', unset = NA))
   if(is.na(cores)) cores <- parallel::detectCores()
   doParallel::registerDoParallel(cores)
   
-  if (li20_version == "v5"){
-    x <- li20v5(U=U)
-  } else if (li20_version == "v1"){
+  if (model == "li23"){
+    x <- li23(U=U)
+  } else if (model == "li20"){
     x <- li20(U=U)
   }
   
@@ -154,10 +154,7 @@ plot_percentile <- function(U = 373, Nsim=100, order="population", li20_version 
       axis.text.y=ggplot2::element_blank(),
       axis.ticks.y.left = element_blank(),
       panel.border=ggplot2::element_blank(),
-      legend.position = "none",
-      axis.title.x=ggplot2::element_blank(), 
-      axis.ticks.x=ggplot2::element_blank(), 
-      axis.text.x=ggplot2::element_blank()
+      legend.position = "bottom"
     ) + 
     ggplot2::ggtitle("90th percentile")
 

@@ -1,4 +1,4 @@
-#' Covid spatPomp generator v5
+#' Build spatPomp object for li23
 #'
 #' Generate a \sQuote{spatPomp} object for Covid in \code{U} cities in China.
 #'
@@ -15,7 +15,7 @@
 #' @return An object of class \sQuote{spatPomp} representing a \code{U}-dimensional spatially coupled Covid POMP model.
 #'
 #' @export
-li20v5 <- function(U = 373, dt = 1/4,
+li23 <- function(U = 373, dt = 1/4,
 		   sharedOneInterval = c("theta","tau","sigma_SE","E_0","Iu_0"),
                    sharedTwoInterval = c("alpha","Beta","mu","Z","D","Td"),
 		   version = c("MLEperiod3","li20period1","li20period2","li20period3"),

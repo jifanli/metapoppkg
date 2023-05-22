@@ -2,7 +2,7 @@
 % Please edit documentation in R/par_li.R
 \name{par_li}
 \alias{par_li}
-\title{Parameter transform for li20v3 model}
+\title{Parameter transform for li20 and li23 model}
 \usage{
 par_li(
   pars,
@@ -27,7 +27,7 @@ par_li(
 transformed parameter vector
 }
 \description{
-Transform li20 parameters to and from ranges used by Li et al
+Transform li20 or li23 parameters to and from ranges used by Li et al (2020)
 }
 \examples{
 par_li1 <- c(
@@ -45,7 +45,7 @@ D_af1     = 0.12646338,
 Td_af1    = 0.20000000,
 theta1    = 0.89626861,
 tau1      = 0.91718058,
-sigma_SE1 = 0.13483710, # when dt=1/4, size_SE1=0.550023483/6, sigma_SE1 should be 0.1348371
+sigma_SE1 = 0.13483710,
 E_01      = 0.44362243,
 Iu_01     = 0.98409838
 )

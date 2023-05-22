@@ -8,7 +8,7 @@ CHECK_LIK=TRUE
 U=switch(i,5,20,373)
 
 set.seed(99)
-p <- li20v5(U=U)
+p <- li23(U=U)
 s <- simulate(p)
 obs(s)[1:3,1:5]
 
