@@ -383,15 +383,13 @@ li23 <- function(U = 373, dt = 1/4,
     int u;
     lik = 0;
     for (u = 0; u < U; u++) {
-      m = C[u];
+      m = C[u] > 0 ? C[u] : 0;
       v = m*tau[u*tau_expand]*m*tau[u*tau_expand]+m+vtol;
-      if (C < 0) {lik += log(tol);} else {
-        if (cases[u] > tol) {
-          lik += log(pnorm(cases[u]+0.5,m,sqrt(v),1,0)-
-            pnorm(cases[u]-0.5,m,sqrt(v)+tol,1,0) + tol);
-        } else {
-          lik += log(pnorm(cases[u]+0.5,m,sqrt(v)+tol,1,0)+tol);
-        }
+      if (cases[u] > tol) {
+        lik += log(pnorm(cases[u]+0.5,m,sqrt(v),1,0)-
+          pnorm(cases[u]-0.5,m,sqrt(v)+tol,1,0) + tol);
+      } else {
+        lik += log(pnorm(cases[u]+0.5,m,sqrt(v)+tol,1,0)+tol);
       }
     }
     if(!give_log) lik = (lik > log(tol)) ? exp(lik) : tol;
@@ -421,17 +419,15 @@ li23 <- function(U = 373, dt = 1/4,
 
   covid_dunit_measure <- Csnippet("
     double vtol = 1e-5;
-    double m = C;
+    double m = C>0 ? C : 0;
     const double *tau = &tau1;
     double v = m*tau[u*tau_expand]*m*tau[u*tau_expand]+m+vtol;
     double tol = 1e-300;
-    if (C < 0) {lik = 0;} else {
-      if (cases > tol) {
-        lik = pnorm(cases+0.5,m,sqrt(v),1,0)-
-          pnorm(cases-0.5,m,sqrt(v)+tol,1,0)+tol;
-      } else {
-        lik = pnorm(cases+0.5,m,sqrt(v),1,0)+tol;
-      }
+    if (cases > tol) {
+      lik = pnorm(cases+0.5,m,sqrt(v),1,0)-
+        pnorm(cases-0.5,m,sqrt(v)+tol,1,0)+tol;
+    } else {
+      lik = pnorm(cases+0.5,m,sqrt(v),1,0)+tol;
     }
     if(give_log) lik = log(lik);
   ")
