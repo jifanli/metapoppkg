@@ -1,0 +1,54 @@
+
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> 
+> library(metapoppkg)
+Loading required package: pomp
+
+Welcome to pomp!
+
+As of version 4.6, no user-visible pomp function has a name that
+includes a dot ('.'). Function names have been changed to replace the
+dot with an underscore ('_'). For more information, see the pomp blog:
+https://kingaa.github.io/pomp/blog.html.
+
+Loading required package: spatPomp
+Loading required package: ggplot2
+Loading required package: ggnewscale
+Loading required package: rlang
+Loading required package: doParallel
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: doRNG
+Loading required package: rngtools
+Loading required package: patchwork
+> m1 <- li23(U=5, for_ibpf = F, days=5)
+> bg1 <- girf(m1,kind="bootstrap",Np=20,Ninter=2,Nguide=10,lookahead=1,tol=1e-5,verbose=TRUE)
+loading ‘/var/folders/06/knh9m6tn4rzf4zn3h_0c8qtr0000gs/T//RtmpZ99oIq/53559/pomp_ccd51ed858ca9abea436c13f7d760508.so’ 
+loading ‘/var/folders/06/knh9m6tn4rzf4zn3h_0c8qtr0000gs/T//RtmpZ99oIq/53559/pomp_20d05252083213462f5659876c997d27.so’ 
+unloading ‘/var/folders/06/knh9m6tn4rzf4zn3h_0c8qtr0000gs/T//RtmpZ99oIq/53559/pomp_ccd51ed858ca9abea436c13f7d760508.so’ 
+unloading ‘/var/folders/06/knh9m6tn4rzf4zn3h_0c8qtr0000gs/T//RtmpZ99oIq/53559/pomp_20d05252083213462f5659876c997d27.so’ 
+> round(logLik(bg1),4)
+[1] -13.1714
+> 
+> 
+> 
+> 
+> 
