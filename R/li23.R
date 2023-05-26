@@ -446,10 +446,15 @@ li23 <- function(U = 373, dt = 1/4,
   covid_vunit_measure <- spatPomp_Csnippet(
     unit_paramnames='tau',
     code="
-      double m;
+      double m = C>0 ? C : 0;
       double vtol = 1e-5;
-      m = C;
       vc = m*tau[u*tau_expand]*m*tau[u*tau_expand]+m+vtol;
+    ")
+
+  covid_munit_measure <- spatPomp_Csnippet(
+     code="
+      double* M_tau = &M_tau1;
+      M_tau[u*tau_expand] = (vc>C) && (C>0) ? sqrt(vc-C)/C : 0; 
     ")
 
   covid_rinit <- spatPomp_Csnippet(
@@ -538,6 +543,7 @@ li23 <- function(U = 373, dt = 1/4,
     dmeasure=covid_dmeasure,
     eunit_measure=covid_eunit_measure,
     vunit_measure=covid_vunit_measure,
+    munit_measure=covid_munit_measure,
     rmeasure=covid_rmeasure,
     dunit_measure=covid_dunit_measure
   )
