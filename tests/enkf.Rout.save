@@ -18,6 +18,11 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > 
+> i <- 1
+> U <- 5
+> N <- 5
+> Np <- switch(i,20,500)
+> 
 > library(metapoppkg)
 Loading required package: pomp
 
@@ -39,23 +44,25 @@ Loading required package: parallel
 Loading required package: doRNG
 Loading required package: rngtools
 Loading required package: patchwork
-> m1 <- li23(U=5, for_ibpf = F, days=5, version="li20period3")
+> m1 <- li23(U=U, version="li20period3", for_ibpf = F, days=N)
 > 
-> # test bootstrap girf
-> set.seed(530)
-> bg1 <- girf(m1,kind="bootstrap",Np=20,Ninter=2,Nguide=10,lookahead=1,tol=1e-5)
-> round(logLik(bg1),4)
-[1] -9.2416
+> set.seed(526)
+> e1 <- enkf(m1,Np=Np)
 > 
-> if(0){ # NOT YET DEBUGGED
-+ library(metapoppkg)
-+ m1 <- li23(U=5, for_ibpf = F, days=5, version="li20period3")
-+ 
-+ # test moment girf
-+ mg1 <- girf(m1,kind="moment",Np=20,Ninter=2,Nguide=10,lookahead=1,tol=1e-5,verbose=TRUE)
-+ round(logLik(mg1),4)
-+ }
+> round(logLik(e1),4)
+[1] 55.2414
 > 
+> set.seed(527)
+> s1 <- simulate(m1)
+> v1 <- vunit_measure(s1,states(s1),1:U,1:N,coef(s1))
+> v1[,,1]
+[1] 1e-05 1e-05 1e-05 1e-05 1e-05
 > 
+> set.seed(528)
+> i1 <- ienkf(s1,Np=Np,cooling.fraction.50=0.5,Nenkf=2,
++   rw.sd = rw_sd(alpha_be1=0.02,Beta_af1=0.02))
+> 
+> round(logLik(i1),4)
+[1] 42.3958
 > 
 > 

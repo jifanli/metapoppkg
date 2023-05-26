@@ -267,7 +267,14 @@ li23 <- function(U = 373, dt = 1/4,
           rate[w] = rate[w]>0 ? rate[w] : 0;
         }
         rate[SE] = rate[SE]*rgammawn(sigma_SE[sigma_SE_expand*u],dt)/dt;
-        
+
+        S[u] = S[u]>0 ? round(S[u]) : 0;
+	E[u] = E[u]>0 ? round(E[u]) : 0;
+	Iu[u] = Iu[u]>0 ? round(Iu[u]) : 0;
+	Ir[u] = Ir[u]>0 ? round(Ir[u]) : 0;
+	Ca[u] = Ca[u]>0 ? round(Ca[u]) : 0;
+	Cb[u] = Cb[u]>0 ? round(Cb[u]) : 0;
+	C[u] = C[u]>0 ? round(C[u]) : 0;
         reulermultinom(2,S[u], &rate[SE],dt,&dN[SE]);
         reulermultinom(3,E[u], &rate[EIr],dt,&dN[EIr]);
         reulermultinom(1,Ir[u],&rate[IrR],dt,&dN[IrR]);
