@@ -7,9 +7,10 @@
 #' @param x a \code{spatPomp} object
 #' @param limit the upper limit of case numbers in the plot
 #' @param order the order of the units in the plot
-#' @import ggplot2
-#' @import ggnewscale
+#' @importFrom ggplot2 ggplot aes sec_axis element_blank
+#' @importFrom ggnewscale new_scale
 #' @importFrom rlang sym
+#' @importFrom dplyr .data
 #' @return a \code{ggplot} plot of class \sQuote{gg} and \sQuote{ggplot} visualizing
 #' the time series data over multiple spatial units via a tile-plot.
 #'

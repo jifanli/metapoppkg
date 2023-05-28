@@ -9,10 +9,11 @@
 #' @param seed the seed used for simulations
 #' @param registerDoRNG the seed used to register the doRNG foreach backend
 #' @param params a named numeric vector or a matrix with rownames
-#' @import ggplot2
-#' @import ggnewscale
-#' @import doParallel
-#' @import doRNG
+#' @importFrom ggplot2 ggplot aes sec_axis element_blank
+#' @importFrom ggnewscale new_scale
+#' @importFrom doParallel registerDoParallel
+#' @importFrom doRNG registerDoRNG
+#' @importFrom dplyr .data
 #' @import patchwork
 #' @import spatPomp
 #' @importFrom rlang sym

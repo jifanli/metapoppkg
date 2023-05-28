@@ -43,3 +43,4 @@ cache
 *.Rproj
 .Rproj.user
 *.gz
+.RData

@@ -9,8 +9,8 @@
 #' @param arrowsize size of the arrows
 #' @param pointsize size of the points
 #' @param mob_modify_factor A multiplicative factor, which is used to control the magnitude of adjustment for the mobility data
-#' @import ggplot2
-#' @import pomp
+#' @importFrom ggplot2 ggplot geom_point geom_curve aes_string
+#' @importFrom pomp melt
 #' @return a plot of the mobility data
 #'
 #' @export
@@ -48,18 +48,18 @@ plot_dist <- function(day = 1, city_index=1:373, U=NULL, linewidth=1/50000, arro
   mobi$dir[in_index]="toward Wuhan"
   mobi$dir[out_index]="away from Wuhan"
 
-  ggplot(coordinates,aes_string("Long","Lat"))+
-    geom_point(size=pointsize) + geom_curve(
+  ggplot2::ggplot(coordinates,aes_string("Long","Lat"))+
+    ggplot2::geom_point(size=pointsize) + ggplot2::geom_curve(
       curvature = 0.1, 
       aes_string(x = "Long_from", y = "Lat_from", xend = "Long_to", yend = "Lat_to", col = "dir"),
       linewidth = mobi[-c(out_index,in_index),]$value*linewidth,
       data = mobi[-c(out_index,in_index),]
-    ) + geom_curve(
+    ) + ggplot2::geom_curve(
       curvature = 0.1, 
       aes_string(x = "Long_from", y = "Lat_from", xend = "Long_to", yend = "Lat_to", col = "dir"),
       linewidth = mobi[out_index,]$value*linewidth,
       data = mobi[in_index,]
-    ) + geom_curve(
+    ) + ggplot2::geom_curve(
       curvature = 0.1, 
       aes_string(x = "Long_from", y = "Lat_from", xend = "Long_to", yend = "Lat_to", col = "dir"),
       linewidth = mobi[out_index,]$value*linewidth,
