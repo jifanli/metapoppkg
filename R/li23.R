@@ -16,7 +16,7 @@
 #'
 #' @export
 li23 <- function(U = 373, dt = 1/4,
-		   sharedOneInterval = c("theta","tau","sigma_SE","E_0","Iu_0"),
+		   sharedOneInterval = c("theta","tau","sigma_SE","E_0","A_0"),
                    sharedTwoInterval = c("alpha","Beta","mu","Z","D","Td"),
 		   version = c("MLEperiod3","li20period1","li20period2","li20period3"),
 		   mob_modify_factor = 20, days = 30, for_ibpf = T
@@ -40,7 +40,7 @@ li23 <- function(U = 373, dt = 1/4,
       Td_be=9,
       Td_af=6,
       E_0=934.2861,
-      Iu_0=1435.945
+      A_0=1435.945
     )
   } else if(version[1] == "li20period3") {
     testPar <- c(
@@ -60,7 +60,7 @@ li23 <- function(U = 373, dt = 1/4,
       Td_be=9,
       Td_af=6,
       E_0=1000,
-      Iu_0=1000
+      A_0=1000
     )
   } else if(version[1] == "li20period2") {
     testPar <- c(
@@ -80,7 +80,7 @@ li23 <- function(U = 373, dt = 1/4,
       Td_be=9,
       Td_af=6,
       E_0=1000,
-      Iu_0=1000
+      A_0=1000
     )
   } else if(version[1] == "li20period1") {
     testPar <- c(
@@ -101,13 +101,13 @@ li23 <- function(U = 373, dt = 1/4,
       Td_be=9,
       Td_af=6,
       E_0=1000,
-      Iu_0=1000
+      A_0=1000
     )
   }
   
  
   
-  OneIntervalParNames <- c("theta","tau","sigma_SE","E_0","Iu_0")
+  OneIntervalParNames <- c("theta","tau","sigma_SE","E_0","A_0")
   TwoIntervalParNames <- c("alpha","Beta","mu","Z","D","Td")
   sharedParNames <- c(
     if(length(sharedTwoInterval)>0) c(paste0(sharedTwoInterval,"_be"),paste0(sharedTwoInterval,"_af")) else NULL,
@@ -168,7 +168,7 @@ li23 <- function(U = 373, dt = 1/4,
     )
   }
 
-  covid_unit_statenames <- c('S','E','Iu','Ir','Ca','Cb','C')
+  covid_unit_statenames <- c('S','E','A','I','Ca','Cb','C')
   if(for_ibpf == T) {
     covid_paramnames <- c(
       if(!is.null(unitParNames)) paste0(rep(unitParNames,each=U),1:U) else NULL,
@@ -191,7 +191,7 @@ li23 <- function(U = 373, dt = 1/4,
   names(covid_testPar) <- covid_paramnames
 
   covid_rprocess <- spatPomp_Csnippet(
-    unit_statenames=c('S','E','Ir','Iu','Ca','Cb','C'),
+    unit_statenames=c('S','E','I','A','Ca','Cb','C'),
     unit_paramnames=c("alpha_be","Beta_be","alpha_af","Beta_af","mu_be","Z_be",
       "D_be","mu_af","Z_af","D_af","theta","Td_be","Td_af","sigma_SE"),
     unit_covarnames=c('pop'),
@@ -200,29 +200,29 @@ li23 <- function(U = 373, dt = 1/4,
       double rate[numTrans], dN[numTrans];
 //      
 //      |         |          |
-//   TS |      TE |      TIu |
+//   TS |      TE |      TA |
 //      |         |          |
-//      +    SE   +   EIu    +
-//      S ------> E ------> Iu -----+ IuR
+//      +    SE   +   EA    +
+//      S ------> E ------> A -----+ AR
 //      |         |  \       \ 
 //   ST |      ET |   \       \ 
-//      |         |    \       ---+ IuT
+//      |         |    \       ---+ AT
 //      +         +     \        
-//                       ---> Ir ----+ IrR
+//                       ---> I ----+ IR
 //                        \    
-//                     EIr \    
+//                     EI \    
 //                          \    
 //                           \
 //                            \            CaCb       CbC
 //                             -----+ Ca -------+ Cb ------+ C
 //
       const int SE=0, ST=1;
-      const int EIr=2, EIu=3, ET=4;
-      const int IrR=5; 
-      const int IuR=6, IuT=7;
+      const int EI=2, EA=3, ET=4;
+      const int IR=5; 
+      const int AR=6, AT=7;
       const int CaCb=8;
       const int CbC=9; 
-      const int TS=10, TE=11, TIu=12; 
+      const int TS=10, TE=11, TA=12; 
       int d,u,v,w;
       double factor_uv;
       int day = (int) t+1;  // day 1 corresponds to continuous time t in (0,1]
@@ -235,32 +235,32 @@ li23 <- function(U = 373, dt = 1/4,
       const double* Td = day<15 ? Td_be : Td_af;
       
       for (u = 0 ; u < U ; u++) {
-        rate[ST]=rate[TS]=rate[ET]=rate[TE]=rate[IuT]=rate[TIu]=0;
+        rate[ST]=rate[TS]=rate[ET]=rate[TE]=rate[AT]=rate[TA]=0;
 	// immigration rates are total, for a Poisson entry model
         // emigration rates are per capita, for a multinomial exit model	
 	factor_uv = 1;
         for (v=0; v < U ; v++) {
           if (day>=15) factor_uv = (u==0)||(v==0) ? 0.02 : 0.2 ;
 	  d = (day>=15) ? 14 : day; // travel for days 15-30 is set equal to day 14
-          rate[TS] +=factor_uv * mob[u*14-1+d][v]*S[v]/(pop[v]-Ir[v]);
-          rate[ST] +=factor_uv * mob[v*14-1+d][u]/(pop[u]-Ir[u]);
-          rate[TE] +=factor_uv * mob[u*14-1+d][v]*E[v]/(pop[v]-Ir[v]);
-          rate[ET] +=factor_uv * mob[v*14-1+d][u]/(pop[u]-Ir[u]);
-          rate[TIu]+=factor_uv * mob[u*14-1+d][v]*Iu[v]/(pop[v]-Ir[v]);
-          rate[IuT]+=factor_uv * mob[v*14-1+d][u]/(pop[u]-Ir[u]);
+          rate[TS] +=factor_uv * mob[u*14-1+d][v]*S[v]/(pop[v]-I[v]);
+          rate[ST] +=factor_uv * mob[v*14-1+d][u]/(pop[u]-I[u]);
+          rate[TE] +=factor_uv * mob[u*14-1+d][v]*E[v]/(pop[v]-I[v]);
+          rate[ET] +=factor_uv * mob[v*14-1+d][u]/(pop[u]-I[u]);
+          rate[TA]+=factor_uv * mob[u*14-1+d][v]*A[v]/(pop[v]-I[v]);
+          rate[AT]+=factor_uv * mob[v*14-1+d][u]/(pop[u]-I[u]);
         }
  
         rate[TS] = (theta[theta_expand*u])*rate[TS];
         rate[TE] = (theta[theta_expand*u])*rate[TE];
-        rate[TIu] = (theta[theta_expand*u])*rate[TIu];
+        rate[TA] = (theta[theta_expand*u])*rate[TA];
         rate[ST] = (theta[theta_expand*u])*rate[ST];
         rate[ET] = (theta[theta_expand*u])*rate[ET];
-        rate[IuT] = (theta[theta_expand*u])*rate[IuT];
-        rate[SE] = (Beta[Beta_expand*u]) * (Ir[u]+(mu[mu_expand*u])*Iu[u])/pop[u];
-        rate[EIr] = (alpha[alpha_expand*u])/(Z[Z_expand*u]);
-        rate[EIu] = (1-(alpha[alpha_expand*u]))/(Z[Z_expand*u]);
-        rate[IrR] = 1/(D[D_expand*u]);
-        rate[IuR] = 1/(D[D_expand*u]);
+        rate[AT] = (theta[theta_expand*u])*rate[AT];
+        rate[SE] = (Beta[Beta_expand*u]) * (I[u]+(mu[mu_expand*u])*A[u])/pop[u];
+        rate[EI] = (alpha[alpha_expand*u])/(Z[Z_expand*u]);
+        rate[EA] = (1-(alpha[alpha_expand*u]))/(Z[Z_expand*u]);
+        rate[IR] = 1/(D[D_expand*u]);
+        rate[AR] = 1/(D[D_expand*u]);
         rate[CaCb] = 2/(Td[Td_expand*u]);
         rate[CbC] = 2/(Td[Td_expand*u]);
         for (w=0; w < numTrans ; w++) {
@@ -270,27 +270,27 @@ li23 <- function(U = 373, dt = 1/4,
 
         S[u] = S[u]>0 ? round(S[u]) : 0;
 	E[u] = E[u]>0 ? round(E[u]) : 0;
-	Iu[u] = Iu[u]>0 ? round(Iu[u]) : 0;
-	Ir[u] = Ir[u]>0 ? round(Ir[u]) : 0;
+	A[u] = A[u]>0 ? round(A[u]) : 0;
+	I[u] = I[u]>0 ? round(I[u]) : 0;
 	Ca[u] = Ca[u]>0 ? round(Ca[u]) : 0;
 	Cb[u] = Cb[u]>0 ? round(Cb[u]) : 0;
 	C[u] = C[u]>0 ? round(C[u]) : 0;
         reulermultinom(2,S[u], &rate[SE],dt,&dN[SE]);
-        reulermultinom(3,E[u], &rate[EIr],dt,&dN[EIr]);
-        reulermultinom(1,Ir[u],&rate[IrR],dt,&dN[IrR]);
-        reulermultinom(2,Iu[u],&rate[IuR],dt,&dN[IuR]);
+        reulermultinom(3,E[u], &rate[EI],dt,&dN[EI]);
+        reulermultinom(1,I[u],&rate[IR],dt,&dN[IR]);
+        reulermultinom(2,A[u],&rate[AR],dt,&dN[AR]);
         reulermultinom(1,Ca[u],&rate[CaCb],dt,&dN[CaCb]);
         reulermultinom(1,Cb[u],&rate[CbC],dt,&dN[CbC]);
 	dN[TS] = rpois(rate[TS]*dt);
 	dN[TE] = rpois(rate[TE]*dt);
-	dN[TIu] = rpois(rate[TIu]*dt);
+	dN[TA] = rpois(rate[TA]*dt);
 
         // transitions between classes
         S[u]  += dN[TS]   - dN[ST]  - dN[SE];
-        E[u]  += dN[SE]   + dN[TE]  - dN[ET] - dN[EIr] - dN[EIu];
-        Ir[u] += dN[EIr]  - dN[IrR];
-        Iu[u] += dN[EIu]  - dN[IuR] + dN[TIu] - dN[IuT];
-        Ca[u] += dN[EIr]  - dN[CaCb];
+        E[u]  += dN[SE]   + dN[TE]  - dN[ET] - dN[EI] - dN[EA];
+        I[u] += dN[EI]  - dN[IR];
+        A[u] += dN[EA]  - dN[AR] + dN[TA] - dN[AT];
+        Ca[u] += dN[EI]  - dN[CaCb];
         Cb[u] += dN[CaCb] - dN[CbC];
         C[u]  += dN[CbC];
       
@@ -298,27 +298,27 @@ li23 <- function(U = 373, dt = 1/4,
   ')
 
   covid_skel <- spatPomp_Csnippet(
-    unit_vfnames=c('S','E','Ir','Iu','Ca','Cb','C'),
+    unit_vfnames=c('S','E','I','A','Ca','Cb','C'),
     unit_paramnames=c("alpha_be","Beta_be","alpha_af","Beta_af","mu_be","Z_be",
       "D_be","mu_af","Z_af","D_af","theta","Td_be","Td_af","sigma_SE"),
     unit_covarnames=c('pop'),
     code='
       const double* S=&S1;
       const double* E=&E1;
-      const double* Iu=&Iu1;
-      const double* Ir=&Ir1;
+      const double* A=&A1;
+      const double* I=&I1;
       const double* Ca=&Ca1;
       const double* Cb=&Cb1;
       const double* C=&C1;
       const int numTrans = 13; // number of transitions
       double rate[numTrans];
       const int SE=0, ST=1;
-      const int EIr=2, EIu=3, ET=4;
-      const int IrR=5; 
-      const int IuR=6, IuT=7;
+      const int EI=2, EA=3, ET=4;
+      const int IR=5; 
+      const int AR=6, AT=7;
       const int CaCb=8;
       const int CbC=9; 
-      const int TS=10, TE=11, TIu=12; 
+      const int TS=10, TE=11, TA=12; 
       int d,u,v,w;
       double factor_uv;
       int day = (int) t+1;  // day 1 corresponds to continuous time t in (0,1]
@@ -331,32 +331,32 @@ li23 <- function(U = 373, dt = 1/4,
       const double* Td = day<15 ? Td_be : Td_af;
       
       for (u = 0 ; u < U ; u++) {
-        rate[ST]=rate[TS]=rate[ET]=rate[TE]=rate[IuT]=rate[TIu]=0;
+        rate[ST]=rate[TS]=rate[ET]=rate[TE]=rate[AT]=rate[TA]=0;
 	// immigration rates are total, for a Poisson entry model
         // emigration rates are per capita, for a multinomial exit model	
 	factor_uv = 1;
         for (v=0; v < U ; v++) {
           if (day>=15) factor_uv = (u==0)||(v==0) ? 0.02 : 0.2 ;
 	  d = (day>=15) ? 14 : day; // travel for days 15-30 is set equal to day 14
-          rate[TS] +=factor_uv * mob[u*14-1+d][v]*S[v]/(pop[v]-Ir[v]);
-          rate[ST] +=factor_uv * mob[v*14-1+d][u]/(pop[u]-Ir[u]);
-          rate[TE] +=factor_uv * mob[u*14-1+d][v]*E[v]/(pop[v]-Ir[v]);
-          rate[ET] +=factor_uv * mob[v*14-1+d][u]/(pop[u]-Ir[u]);
-          rate[TIu]+=factor_uv * mob[u*14-1+d][v]*Iu[v]/(pop[v]-Ir[v]);
-          rate[IuT]+=factor_uv * mob[v*14-1+d][u]/(pop[u]-Ir[u]);
+          rate[TS] +=factor_uv * mob[u*14-1+d][v]*S[v]/(pop[v]-I[v]);
+          rate[ST] +=factor_uv * mob[v*14-1+d][u]/(pop[u]-I[u]);
+          rate[TE] +=factor_uv * mob[u*14-1+d][v]*E[v]/(pop[v]-I[v]);
+          rate[ET] +=factor_uv * mob[v*14-1+d][u]/(pop[u]-I[u]);
+          rate[TA]+=factor_uv * mob[u*14-1+d][v]*A[v]/(pop[v]-I[v]);
+          rate[AT]+=factor_uv * mob[v*14-1+d][u]/(pop[u]-I[u]);
         }
  
         rate[TS] = (theta[theta_expand*u])*rate[TS];
         rate[TE] = (theta[theta_expand*u])*rate[TE];
-        rate[TIu] = (theta[theta_expand*u])*rate[TIu];
+        rate[TA] = (theta[theta_expand*u])*rate[TA];
         rate[ST] = (theta[theta_expand*u])*rate[ST];
         rate[ET] = (theta[theta_expand*u])*rate[ET];
-        rate[IuT] = (theta[theta_expand*u])*rate[IuT];
-        rate[SE] = (Beta[Beta_expand*u]) * (Ir[u]+(mu[mu_expand*u])*Iu[u])/pop[u];
-        rate[EIr] = (alpha[alpha_expand*u])/(Z[Z_expand*u]);
-        rate[EIu] = (1-(alpha[alpha_expand*u]))/(Z[Z_expand*u]);
-        rate[IrR] = 1/(D[D_expand*u]);
-        rate[IuR] = 1/(D[D_expand*u]);
+        rate[AT] = (theta[theta_expand*u])*rate[AT];
+        rate[SE] = (Beta[Beta_expand*u]) * (I[u]+(mu[mu_expand*u])*A[u])/pop[u];
+        rate[EI] = (alpha[alpha_expand*u])/(Z[Z_expand*u]);
+        rate[EA] = (1-(alpha[alpha_expand*u]))/(Z[Z_expand*u]);
+        rate[IR] = 1/(D[D_expand*u]);
+        rate[AR] = 1/(D[D_expand*u]);
         rate[CaCb] = 2/(Td[Td_expand*u]);
         rate[CbC] = 2/(Td[Td_expand*u]);
         for (w=0; w < numTrans ; w++) {
@@ -366,10 +366,10 @@ li23 <- function(U = 373, dt = 1/4,
         // rates are per capita, except for transitions from a reservoir
 	// this is for consistency with the stochastic version of the model
         DS[u]  = rate[TS]   - (rate[ST] + rate[SE])* S[u];
-        DE[u]  = rate[TE] + rate[SE]*S[u]   - (rate[ET] + rate[EIr] +rate[EIu])*E[u];
-        DIr[u] = rate[EIr]*E[u]  - rate[IrR]*Ir[u];
-        DIu[u] = rate[TIu] + rate[EIu]*E[u]  - (rate[IuR] + rate[IuT])*Iu[u];
-        DCa[u] = rate[EIr]*E[u]  - rate[CaCb]*Ca[u];
+        DE[u]  = rate[TE] + rate[SE]*S[u]   - (rate[ET] + rate[EI] +rate[EA])*E[u];
+        DI[u] = rate[EI]*E[u]  - rate[IR]*I[u];
+        DA[u] = rate[TA] + rate[EA]*E[u]  - (rate[AR] + rate[AT])*A[u];
+        DCa[u] = rate[EI]*E[u]  - rate[CaCb]*Ca[u];
         DCb[u] = rate[CaCb]*Ca[u] - rate[CbC]*Cb[u];
         DC[u]  = rate[CbC]*Cb[u];
       
@@ -458,20 +458,20 @@ li23 <- function(U = 373, dt = 1/4,
     ")
 
   covid_rinit <- spatPomp_Csnippet(
-    unit_statenames=c('S','E','Ir','Iu','Ca','Cb','C'),
+    unit_statenames=c('S','E','I','A','Ca','Cb','C'),
     unit_covarnames=c('pop'),
-    unit_paramnames=c('E_0','Iu_0'),
+    unit_paramnames=c('E_0','A_0'),
     code="
       int u;
       for (u = 0; u < U; u++) {
-        E[u] = Iu[u] = Ir[u] = Ca[u] = Cb[u] = C[u] = 0;
+        E[u] = A[u] = I[u] = Ca[u] = Cb[u] = C[u] = 0;
         S[u] = nearbyint(pop[u]);
       }
       E[0]=nearbyint(E_0[0]);
-      Iu[0]=nearbyint(Iu_0[0]);
+      A[0]=nearbyint(A_0[0]);
       for (u = 1; u < U; u++) {
         E[u]=nearbyint(3*mob[14*u][0]*E_0[u*E_0_expand]/(pop[0]));
-        Iu[u]=nearbyint(3*mob[14*u][0]*Iu_0[u*Iu_0_expand]/(pop[0]));
+        A[u]=nearbyint(3*mob[14*u][0]*A_0[u*A_0_expand]/(pop[0]));
       }
     "
   )
@@ -497,7 +497,7 @@ li23 <- function(U = 373, dt = 1/4,
         paste0("tau",seq(1,U)),
         paste0("sigma_SE",seq(1,U)),
         paste0("E_0",seq(1,U)),
-        paste0("Iu_0",seq(1,U))
+        paste0("A_0",seq(1,U))
       )
     )
   } else {
@@ -521,7 +521,7 @@ li23 <- function(U = 373, dt = 1/4,
         paste0("tau",seq(1,ifelse("tau"%in%sharedOneInterval,1,U))) ,
         paste0("sigma_SE",seq(1,ifelse("sigma_SE"%in%sharedOneInterval,1,U))),
         paste0("E_0",seq(1,ifelse("E_0"%in%sharedOneInterval,1,U))),
-        paste0("Iu_0",seq(1,ifelse("Iu_0"%in%sharedOneInterval,1,U)))
+        paste0("A_0",seq(1,ifelse("A_0"%in%sharedOneInterval,1,U)))
       )
     )
   }
