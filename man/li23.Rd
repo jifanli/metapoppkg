@@ -7,7 +7,7 @@
 li23(
   U = 373,
   dt = 1/4,
-  sharedOneInterval = c("theta", "tau", "sigma_SE", "E_0", "Iu_0"),
+  sharedOneInterval = c("theta", "tau", "sigma_SE", "E_0", "A_0"),
   sharedTwoInterval = c("alpha", "Beta", "mu", "Z", "D", "Td"),
   version = c("MLEperiod3", "li20period1", "li20period2", "li20period3"),
   mob_modify_factor = 20,

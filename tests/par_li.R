@@ -18,7 +18,7 @@ theta1    = 0.89626861,
 tau1      = 0.91718058,
 sigma_SE1 = 0.10000000,
 E_01      = 0.44362243,
-A_01     = 0.98409838
+a_01     = 0.98409838
 )
 par_nat <- par_li(par_li1,U=5,dir="from_li")
 par_li2 <- par_li(par_nat,U=5,dir="to_li")
@@ -44,7 +44,7 @@ mle_test_params <- c(
                      Td_be=0.8,
                      Td_af=0.2,
                      E_0=0.44362243,
-                     A_0=0.984098384
+                     a_0=0.984098384
                    )
 
 # Li et al MLE mapped onto unit scale (allegedly)
@@ -65,5 +65,5 @@ li_test_params <- c(
                      Td_be=0.8,
                      Td_af=0.2,
                      E_0=0.5,
-                     A_0=0.5
+                     a_0=0.5
                    )

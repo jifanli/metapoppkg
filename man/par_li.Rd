@@ -15,7 +15,7 @@ par_li(
 \arguments{
 \item{pars}{names parameter vector}
 
-\item{unitOneInterval}{subset of "theta","sigma_SE","tau","E_0","Iu_0" which are unit-specific}
+\item{unitOneInterval}{subset of "theta","sigma_SE","tau","E_0","a_0" which are unit-specific}
 
 \item{unitTwoInterval}{subset of "alpha","Beta","mu","Z","D","Td" which are unit-specific}
 
@@ -47,7 +47,7 @@ theta1    = 0.89626861,
 tau1      = 0.91718058,
 sigma_SE1 = 0.13483710,
 E_01      = 0.44362243,
-Iu_01     = 0.98409838
+a_01     = 0.98409838
 )
 par_nat <- par_li(par_li1,U=5,dir="from_li")
 par_li2 <- par_li(par_nat,U=5,dir="to_li")

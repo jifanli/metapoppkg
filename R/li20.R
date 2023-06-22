@@ -23,7 +23,7 @@ li20 <- function(U = 373, dt = 1,
                  sharedParNames = c("alpha_be","Beta_be","alpha_af","Beta_af",
                                     "mu_be","Z_be","D_be","mu_af","Z_af","D_af",
                                     "theta","tau","Td_be","Td_af","sigma_SE",
-                                    "E_0","Iu_0"),
+                                    "E_0","a_0"),
                  unitParNames = NULL, for_ibpf = T, 
                  overdispersion_dynamic = F,
                  version = c("li20period3"), mob_modify_factor = 0, days = 30,
@@ -48,7 +48,7 @@ li20 <- function(U = 373, dt = 1,
       Td_be1=9,
       Td_af1=6,
       E_01=934.2861,
-      Iu_01=1435.945
+      a_01=1435.945
     )
   } else if(version[1] == "li20period3") {
     testPar <- c(
@@ -68,7 +68,7 @@ li20 <- function(U = 373, dt = 1,
       tau1=0.5,
       sigma_SE1=0.5, 
       E_01=1000,
-      Iu_01=1000
+      a_01=1000
     )
   } else if(version[1] == "li20period2") {
     testPar <- c(
@@ -88,7 +88,7 @@ li20 <- function(U = 373, dt = 1,
       Td_be1=9,
       Td_af1=6,
       E_01=1000,
-      Iu_01=1000
+      a_01=1000
     )
   } else if(version[1] == "li20period1") {
     testPar = c(
@@ -109,7 +109,7 @@ li20 <- function(U = 373, dt = 1,
       Td_be1=9,
       Td_af1=6,
       E_01=1000,
-      Iu_01=1000
+      a_01=1000
     )
   }
   testPar <- par_li(testPar,U=U,dir="to_li")
@@ -121,7 +121,7 @@ li20 <- function(U = 373, dt = 1,
   if(for_ibpf==T){
     unitParNames <- c("alpha_be","Beta_be","alpha_af","Beta_af","mu_be","Z_be",
                      "D_be","mu_af","Z_af","D_af","theta","tau","Td_be",
-                     "Td_af","sigma_SE","E_0","Iu_0")
+                     "Td_af","sigma_SE","E_0","a_0")
     sharedParNames <- NULL
   }
   
@@ -169,7 +169,7 @@ li20 <- function(U = 373, dt = 1,
     )
   }
   
-  covid_unit_statenames <- c('S','E','Iu','I','Ca','Cb','C')
+  covid_unit_statenames <- c('S','E','a','I','Ca','Cb','C')
   if(!is.null(unitParNames) & !is.null(sharedParNames)){
     covid_paramnames <- c(paste0(rep(unitParNames,each=U),1:U),paste0(sharedParNames,"1"))
   }
@@ -195,7 +195,7 @@ li20 <- function(U = 373, dt = 1,
     double *S = &S1;
     double *E = &E1;
     double *I = &I1;
-    double *Iu = &Iu1;
+    double *a = &a1;
     double *Ca = &Ca1; // Reporting delay states
     double *Cb = &Cb1;
     double *C = &C1;
@@ -283,8 +283,8 @@ li20 <- function(U = 373, dt = 1,
           ud+=mob[v*14-1+day][u]*S[u]/(pop[u]-I[u]);
           ug+=mob[u*14-1+day][v]*E[v]/(pop[v]-I[v]);
           uh+=mob[v*14-1+day][u]*E[u]/(pop[u]-I[u]);
-          uk+=mob[u*14-1+day][v]*Iu[v]/(pop[v]-I[v]);
-          ul+=mob[v*14-1+day][u]*Iu[u]/(pop[u]-Iu[u]);
+          uk+=mob[u*14-1+day][v]*a[v]/(pop[v]-I[v]);
+          ul+=mob[v*14-1+day][u]*a[u]/(pop[u]-I[u]);
         }
       } else {
         if (u==0) {
@@ -294,30 +294,30 @@ li20 <- function(U = 373, dt = 1,
             ud +=0.02*mob[v*14-1+14][u]*S[u]/(pop[u]-I[u]);
             ug +=0.02*mob[u*14-1+14][v]*E[v]/(pop[v]-I[v]);
             uh +=0.02*mob[v*14-1+14][u]*E[u]/(pop[u]-I[u]);
-            uk +=0.02*mob[u*14-1+14][v]*Iu[v]/(pop[v]-I[v]);
-            ul +=0.02*mob[v*14-1+14][u]*Iu[u]/(pop[u]-Iu[u]);
+            uk +=0.02*mob[u*14-1+14][v]*a[v]/(pop[v]-I[v]);
+            ul +=0.02*mob[v*14-1+14][u]*a[u]/(pop[u]-I[u]);
           }
         } else {
           uc +=0.02*mob[u*14-1+14][0]*S[0]/(pop[0]-I[0]);
           ud +=0.02*mob[0*14-1+14][u]*S[u]/(pop[u]-I[u]);
           ug +=0.02*mob[u*14-1+14][0]*E[0]/(pop[0]-I[0]);
           uh +=0.02*mob[0*14-1+14][u]*E[u]/(pop[u]-I[u]);
-          uk +=0.02*mob[u*14-1+14][0]*Iu[0]/(pop[0]-I[0]);
-          ul +=0.02*mob[0*14-1+14][u]*Iu[u]/(pop[u]-Iu[u]);
+          uk +=0.02*mob[u*14-1+14][0]*a[0]/(pop[0]-I[0]);
+          ul +=0.02*mob[0*14-1+14][u]*a[u]/(pop[u]-I[u]);
           
           for (v=1; v < U ; v++) {
             uc +=0.2*mob[u*14-1+14][v]*S[v]/(pop[v]-I[v]);
             ud +=0.2*mob[v*14-1+14][u]*S[u]/(pop[u]-I[u]);
             ug +=0.2*mob[u*14-1+14][v]*E[v]/(pop[v]-I[v]);
             uh +=0.2*mob[v*14-1+14][u]*E[u]/(pop[u]-I[u]);
-            uk +=0.2*mob[u*14-1+14][v]*Iu[v]/(pop[v]-I[v]);
-            ul +=0.2*mob[v*14-1+14][u]*Iu[u]/(pop[u]-Iu[u]);
+            uk +=0.2*mob[u*14-1+14][v]*a[v]/(pop[v]-I[v]);
+            ul +=0.2*mob[v*14-1+14][u]*a[u]/(pop[u]-I[u]);
           }
         }
       }
       
       trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*S[u]/pop[u]*I[u]*dt;
-      trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*S[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*Iu[u]*dt;
+      trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*S[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*a[u]*dt;
       trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
       trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(S[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : S[u]*dt;        
       trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*E[u]/(2+3*Z_be[Z_be_expand*u])*dt;
@@ -325,9 +325,9 @@ li20 <- function(U = 373, dt = 1,
       trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
       trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(E[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : E[u]*dt;
       trans[9] = I[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[10] = Iu[u]/(2+3*D_be[D_be_expand*u])*dt;
+      trans[10] = a[u]/(2+3*D_be[D_be_expand*u])*dt;
       trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
-      trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Iu[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Iu[u]*dt;
+      trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(a[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : a[u]*dt;
       trans[13] = Ca[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
       trans[14] = Cb[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
       for (w=1; w < 15 ; w++) {
@@ -356,7 +356,7 @@ li20 <- function(U = 373, dt = 1,
       Tsa[u]=S[u]+ska[u]/2;
       Tea[u]=E[u]+eka[u]/2;
       Tisa[u]=I[u]+iska[u]/2;
-      Tiaa[u]=Iu[u]+iaka[u]/2;
+      Tiaa[u]=a[u]+iaka[u]/2;
       Tcaa[u]=Ca[u]+caka[u]/2;
       Tcba[u]=Cb[u]+cbka[u]/2;
     }
@@ -375,7 +375,7 @@ li20 <- function(U = 373, dt = 1,
           ug+=mob[u*14-1+day][v]*Tea[v]/(pop[v]-Tisa[v]);
           uh+=mob[v*14-1+day][u]*Tea[u]/(pop[u]-Tisa[u]);
           uk+=mob[u*14-1+day][v]*Tiaa[v]/(pop[v]-Tisa[v]);
-          ul+=mob[v*14-1+day][u]*Tiaa[u]/(pop[u]-Tiaa[u]);
+          ul+=mob[v*14-1+day][u]*Tiaa[u]/(pop[u]-Tisa[u]);
         }
       } else {
         if (u==0) {
@@ -386,7 +386,7 @@ li20 <- function(U = 373, dt = 1,
             ug +=0.02*mob[u*14-1+14][v]*Tea[v]/(pop[v]-Tisa[v]);
             uh +=0.02*mob[v*14-1+14][u]*Tea[u]/(pop[u]-Tisa[u]);
             uk +=0.02*mob[u*14-1+14][v]*Tiaa[v]/(pop[v]-Tisa[v]);
-            ul +=0.02*mob[v*14-1+14][u]*Tiaa[u]/(pop[u]-Tiaa[u]);
+            ul +=0.02*mob[v*14-1+14][u]*Tiaa[u]/(pop[u]-Tisa[u]);
           }
         } else {
           uc +=0.02*mob[u*14-1+14][0]*Tsa[0]/(pop[0]-Tisa[0]);
@@ -394,7 +394,7 @@ li20 <- function(U = 373, dt = 1,
           ug +=0.02*mob[u*14-1+14][0]*Tea[0]/(pop[0]-Tisa[0]);
           uh +=0.02*mob[0*14-1+14][u]*Tea[u]/(pop[u]-Tisa[u]);
           uk +=0.02*mob[u*14-1+14][0]*Tiaa[0]/(pop[0]-Tisa[0]);
-          ul +=0.02*mob[0*14-1+14][u]*Tiaa[u]/(pop[u]-Tiaa[u]);
+          ul +=0.02*mob[0*14-1+14][u]*Tiaa[u]/(pop[u]-Tisa[u]);
           
           for (v=1; v < U ; v++) {
             uc +=0.2*mob[u*14-1+14][v]*Tsa[v]/(pop[v]-Tisa[v]);
@@ -402,7 +402,7 @@ li20 <- function(U = 373, dt = 1,
             ug +=0.2*mob[u*14-1+14][v]*Tea[v]/(pop[v]-Tisa[v]);
             uh +=0.2*mob[v*14-1+14][u]*Tea[u]/(pop[u]-Tisa[u]);
             uk +=0.2*mob[u*14-1+14][v]*Tiaa[v]/(pop[v]-Tisa[v]);
-            ul +=0.2*mob[v*14-1+14][u]*Tiaa[u]/(pop[u]-Tiaa[u]);
+            ul +=0.2*mob[v*14-1+14][u]*Tiaa[u]/(pop[u]-Tisa[u]);
           }
         }
       }
@@ -445,7 +445,7 @@ li20 <- function(U = 373, dt = 1,
       Tsb[u]=S[u]+skb[u]/2;
       Teb[u]=E[u]+ekb[u]/2;
       Tisb[u]=I[u]+iskb[u]/2;
-      Tiab[u]=Iu[u]+iakb[u]/2;
+      Tiab[u]=a[u]+iakb[u]/2;
       Tcab[u]=Ca[u]+cakb[u]/2;
       Tcbb[u]=Cb[u]+cbkb[u]/2;
     }
@@ -464,7 +464,7 @@ li20 <- function(U = 373, dt = 1,
           ug+=mob[u*14-1+day][v]*Teb[v]/(pop[v]-Tisb[v]);
           uh+=mob[v*14-1+day][u]*Teb[u]/(pop[u]-Tisb[u]);
           uk+=mob[u*14-1+day][v]*Tiab[v]/(pop[v]-Tisb[v]);
-          ul+=mob[v*14-1+day][u]*Tiab[u]/(pop[u]-Tiab[u]);
+          ul+=mob[v*14-1+day][u]*Tiab[u]/(pop[u]-Tisb[u]);
         }
       } else {
         if (u==0) {
@@ -475,7 +475,7 @@ li20 <- function(U = 373, dt = 1,
             ug +=0.02*mob[u*14-1+14][v]*Teb[v]/(pop[v]-Tisb[v]);
             uh +=0.02*mob[v*14-1+14][u]*Teb[u]/(pop[u]-Tisb[u]);
             uk +=0.02*mob[u*14-1+14][v]*Tiab[v]/(pop[v]-Tisb[v]);
-            ul +=0.02*mob[v*14-1+14][u]*Tiab[u]/(pop[u]-Tiab[u]);
+            ul +=0.02*mob[v*14-1+14][u]*Tiab[u]/(pop[u]-Tisb[u]);
           }
         } else {
           uc +=0.02*mob[u*14-1+14][0]*Tsb[0]/(pop[0]-Tisb[0]);
@@ -483,7 +483,7 @@ li20 <- function(U = 373, dt = 1,
           ug +=0.02*mob[u*14-1+14][0]*Teb[0]/(pop[0]-Tisb[0]);
           uh +=0.02*mob[0*14-1+14][u]*Teb[u]/(pop[u]-Tisb[u]);
           uk +=0.02*mob[u*14-1+14][0]*Tiab[0]/(pop[0]-Tisb[0]);
-          ul +=0.02*mob[0*14-1+14][u]*Tiab[u]/(pop[u]-Tiab[u]);
+          ul +=0.02*mob[0*14-1+14][u]*Tiab[u]/(pop[u]-Tisb[u]);
           
           for (v=1; v < U ; v++) {
             uc +=0.2*mob[u*14-1+14][v]*Tsb[v]/(pop[v]-Tisb[v]);
@@ -491,7 +491,7 @@ li20 <- function(U = 373, dt = 1,
             ug +=0.2*mob[u*14-1+14][v]*Teb[v]/(pop[v]-Tisb[v]);
             uh +=0.2*mob[v*14-1+14][u]*Teb[u]/(pop[u]-Tisb[u]);
             uk +=0.2*mob[u*14-1+14][v]*Tiab[v]/(pop[v]-Tisb[v]);
-            ul +=0.2*mob[v*14-1+14][u]*Tiab[u]/(pop[u]-Tiab[u]);
+            ul +=0.2*mob[v*14-1+14][u]*Tiab[u]/(pop[u]-Tisb[u]);
           }
         }
       }
@@ -535,7 +535,7 @@ li20 <- function(U = 373, dt = 1,
       Tsc[u]=S[u]+skc[u];
       Tec[u]=E[u]+ekc[u];
       Tisc[u]=I[u]+iskc[u];
-      Tiac[u]=Iu[u]+iakc[u];
+      Tiac[u]=a[u]+iakc[u];
       Tcac[u]=Ca[u]+cakc[u];
       Tcbc[u]=Cb[u]+cbkc[u];
     }
@@ -554,7 +554,7 @@ li20 <- function(U = 373, dt = 1,
           ug+=mob[u*14-1+day][v]*Tec[v]/(pop[v]-Tisc[v]);
           uh+=mob[v*14-1+day][u]*Tec[u]/(pop[u]-Tisc[u]);
           uk+=mob[u*14-1+day][v]*Tiac[v]/(pop[v]-Tisc[v]);
-          ul+=mob[v*14-1+day][u]*Tiac[u]/(pop[u]-Tiac[u]);
+          ul+=mob[v*14-1+day][u]*Tiac[u]/(pop[u]-Tisc[u]);
         }
       } else {
         if (u==0) {
@@ -565,7 +565,7 @@ li20 <- function(U = 373, dt = 1,
             ug +=0.02*mob[u*14-1+14][v]*Tec[v]/(pop[v]-Tisc[v]);
             uh +=0.02*mob[v*14-1+14][u]*Tec[u]/(pop[u]-Tisc[u]);
             uk +=0.02*mob[u*14-1+14][v]*Tiac[v]/(pop[v]-Tisc[v]);
-            ul +=0.02*mob[v*14-1+14][u]*Tiac[u]/(pop[u]-Tiac[u]);
+            ul +=0.02*mob[v*14-1+14][u]*Tiac[u]/(pop[u]-Tisc[u]);
           }
         } else {
           uc +=0.02*mob[u*14-1+14][0]*Tsc[0]/(pop[0]-Tisc[0]);
@@ -573,7 +573,7 @@ li20 <- function(U = 373, dt = 1,
           ug +=0.02*mob[u*14-1+14][0]*Tec[0]/(pop[0]-Tisc[0]);
           uh +=0.02*mob[0*14-1+14][u]*Tec[u]/(pop[u]-Tisc[u]);
           uk +=0.02*mob[u*14-1+14][0]*Tiac[0]/(pop[0]-Tisc[0]);
-          ul +=0.02*mob[0*14-1+14][u]*Tiac[u]/(pop[u]-Tiac[u]);
+          ul +=0.02*mob[0*14-1+14][u]*Tiac[u]/(pop[u]-Tisc[u]);
           
           for (v=1; v < U ; v++) {
             uc +=0.2*mob[u*14-1+14][v]*Tsc[v]/(pop[v]-Tisc[v]);
@@ -581,7 +581,7 @@ li20 <- function(U = 373, dt = 1,
             ug +=0.2*mob[u*14-1+14][v]*Tec[v]/(pop[v]-Tisc[v]);
             uh +=0.2*mob[v*14-1+14][u]*Tec[u]/(pop[u]-Tisc[u]);
             uk +=0.2*mob[u*14-1+14][v]*Tiac[v]/(pop[v]-Tisc[v]);
-            ul +=0.2*mob[v*14-1+14][u]*Tiac[u]/(pop[u]-Tiac[u]);
+            ul +=0.2*mob[v*14-1+14][u]*Tiac[u]/(pop[u]-Tisc[u]);
           }
         }
       }
@@ -627,7 +627,7 @@ li20 <- function(U = 373, dt = 1,
       S[u]+=ska[u]/6+skb[u]/3+skc[u]/3+skd[u]/6;
       E[u]+=eka[u]/6+ekb[u]/3+ekc[u]/3+ekd[u]/6;
       I[u]+=iska[u]/6+iskb[u]/3+iskc[u]/3+iskd[u]/6;
-      Iu[u]+=iaka[u]/6+iakb[u]/3+iakc[u]/3+iakd[u]/6;
+      a[u]+=iaka[u]/6+iakb[u]/3+iakc[u]/3+iakd[u]/6;
       Ca[u]+=caka[u]/6+cakb[u]/3+cakc[u]/3+cakd[u]/6;
       Cb[u]+=cbka[u]/6+cbkb[u]/3+cbkc[u]/3+cbkd[u]/6;
       C[u]+=cka[u]/6+ckb[u]/3+ckc[u]/3+ckd[u]/6;
@@ -636,7 +636,7 @@ li20 <- function(U = 373, dt = 1,
       S[u] = S[u]>0 ? S[u] : 0;
       E[u] = E[u]>0 ? E[u] : 0;
       I[u] = I[u]>0 ? I[u] : 0;
-      Iu[u] = Iu[u]>0 ? Iu[u] : 0;
+      a[u] = a[u]>0 ? a[u] : 0;
       Ca[u] = Ca[u]>0 ? Ca[u] : 0;
       Cb[u] = Cb[u]>0 ? Cb[u] : 0;
       C[u] = C[u]>0 ? C[u] : 0;
@@ -792,7 +792,7 @@ li20 <- function(U = 373, dt = 1,
   covid_rinit <- Csnippet("
     double *S = &S1;
     double *E = &E1;
-    double *Iu = &Iu1;
+    double *a = &a1;
     double *I = &I1;
     double *Ca = &Ca1;
     double *Cb = &Cb1;
@@ -800,11 +800,11 @@ li20 <- function(U = 373, dt = 1,
     const double *pop = &pop1;
     int u;
     const double *E_0 = &E_01;
-    const double *Iu_0 = &Iu_01;
+    const double *a_0 = &a_01;
 
     for (u = 0; u < U; u++) {
       E[u] = 0;
-      Iu[u] = 0;
+      a[u] = 0;
       I[u] = 0;
       Ca[u] = 0;
       Cb[u] = 0;
@@ -813,10 +813,10 @@ li20 <- function(U = 373, dt = 1,
     }
       
     E[0]=2000*E_0[0];
-    Iu[0]=2000*Iu_0[0];
+    a[0]=2000*a_0[0];
     for (u = 1; u < U; u++) {
       E[u]=3*mob[14*u][0]*2000*E_0[u*E_0_expand]/(pop[0]);
-      Iu[u]=3*mob[14*u][0]*2000*Iu_0[u*Iu_0_expand]/(pop[0]);
+      a[u]=3*mob[14*u][0]*2000*a_0[u*a_0_expand]/(pop[0]);
     }
   ")
   

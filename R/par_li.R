@@ -3,7 +3,7 @@
 #' Transform li20 or li23 parameters to and from ranges used by Li et al (2020)
 #'
 #' @param pars names parameter vector
-#' @param unitOneInterval subset of "theta","sigma_SE","tau","E_0","A_0" which are unit-specific
+#' @param unitOneInterval subset of "theta","sigma_SE","tau","E_0","a_0" which are unit-specific
 #' @param unitTwoInterval subset of "alpha","Beta","mu","Z","D","Td" which are unit-specific
 #' @param U number of units
 #' @param dir direction, "from_li" or "to_li"
@@ -27,7 +27,7 @@
 #' tau1      = 0.91718058,
 #' sigma_SE1 = 0.13483710,
 #' E_01      = 0.44362243,
-#' A_01     = 0.98409838
+#' a_01     = 0.98409838
 #' )
 #' par_nat <- par_li(par_li1,U=5,dir="from_li")
 #' par_li2 <- par_li(par_nat,U=5,dir="to_li")
@@ -45,12 +45,12 @@ par_li <- function(pars,unitOneInterval=NULL,unitTwoInterval=NULL,U,
     Td = c(5, 10),
     mu =c(0.2, 1),
     E_0 = c(0,2000),
-    A_0 = c(0,2000),
+    a_0 = c(0,2000),
     sigma_SE = c(0,5),
     row.names=c("lo","hi")
   )
   liTransformed <- colnames(range)
-  allOneInterval <- intersect(c("theta","sigma_SE","tau","E_0","A_0"),liTransformed)
+  allOneInterval <- intersect(c("theta","sigma_SE","tau","E_0","a_0"),liTransformed)
   allTwoInterval <- intersect(c("alpha","Beta","mu","Z","D","Td"),liTransformed)
 
   sharedOneInterval <- setdiff(allOneInterval,unitOneInterval)
