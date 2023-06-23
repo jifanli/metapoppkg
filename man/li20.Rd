@@ -9,7 +9,7 @@ li20(
   dt = 1,
   sharedParNames = c("alpha_be", "Beta_be", "alpha_af", "Beta_af", "mu_be", "Z_be",
     "D_be", "mu_af", "Z_af", "D_af", "theta", "tau", "Td_be", "Td_af", "sigma_SE", "E_0",
-    "a_0"),
+    "A_0"),
   unitParNames = NULL,
   for_ibpf = T,
   overdispersion_dynamic = F,
