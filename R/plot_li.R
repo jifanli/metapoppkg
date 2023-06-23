@@ -36,8 +36,7 @@ plot_li <- function(x, U=373, limit=4, order="population") {
   df$y_ticks <- rep(index,30)
 
   ggplot2::ggplot(data = df,
-                  mapping = ggplot2::aes(x = !!rlang::sym(x@timename),
-                                         y = .data$y_ticks)) +
+    mapping = ggplot2::aes(x = !!rlang::sym(x@timename), y = .data$y_ticks)) +
     ggplot2::scale_x_continuous(expand=c(0,0)) +
     ggplot2::scale_y_continuous(expand=c(0,0), sec.axis = sec_axis(~ .)) +
     ggplot2::geom_tile(mapping = ggplot2::aes(fill = !!rlang::sym(x@unit_obsnames))) +
@@ -50,12 +49,14 @@ plot_li <- function(x, U=373, limit=4, order="population") {
     ggplot2::scale_fill_gradient(low = "#FFFFFF", high = "#0000FF",limits=c(0,limit)) + 
     ggplot2::labs(fill = "log10\n(Wuhan+1)") +
     ggnewscale::new_scale("fill") +
-    ggplot2::geom_tile(mapping = ggplot2::aes(fill = .data$Shenyang), data = ~subset(., !is.na(Shenyang))) +
+    ggplot2::geom_tile(mapping = ggplot2::aes(fill = .data$Shenyang),
+      data = ~subset(., !is.na(Shenyang))) +
     ggplot2::scale_fill_gradient(low = "#FFFFFF", high = "#FF0000",limits=c(0,limit)) + 
     ggplot2::labs(fill = "log10\n(Shenyang+1)") +
     ggplot2::theme(
       axis.text.y=ggplot2::element_blank(),
-      axis.ticks.y.left = element_blank(),
-      panel.border=ggplot2::element_blank())
+      axis.ticks.y=ggplot2::element_blank(),
+      panel.border=ggplot2::element_blank(),
+      axis.line.y = ggplot2::element_line(linewidth = 0.5, linetype = "solid"))
   
 }

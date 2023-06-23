@@ -87,12 +87,13 @@ plot_percentile <- function(U = 373, Nsim=100, order="population", model = "li23
     ggplot2::labs(fill = "log10\n(Shenyang+1)") +
     ggplot2::theme(
       axis.text.y=ggplot2::element_blank(),
-      axis.ticks.y.left = element_blank(),
       panel.border=ggplot2::element_blank(),
       legend.position = "none",
       axis.title.x=ggplot2::element_blank(), 
-      axis.ticks.x=ggplot2::element_blank(), 
-      axis.text.x=ggplot2::element_blank()
+      axis.ticks.x=ggplot2::element_blank(),
+      axis.ticks.y=ggplot2::element_blank(),
+      axis.text.x=ggplot2::element_blank(),
+      axis.line.y = ggplot2::element_line(linewidth = 0.5, linetype = "solid")
     ) + 
     ggplot2::ggtitle("10th percentile")
   
@@ -120,13 +121,14 @@ plot_percentile <- function(U = 373, Nsim=100, order="population", model = "li23
     ggplot2::labs(fill = "log10\n(Shenyang+1)") +
     ggplot2::theme(
       axis.text.y=ggplot2::element_blank(),
-      axis.ticks.y.left = element_blank(),
-      panel.border=ggplot2::element_blank(),
+       panel.border=ggplot2::element_blank(),
       legend.position = "none",
       axis.title.x=ggplot2::element_blank(), 
       axis.ticks.x=ggplot2::element_blank(), 
-      axis.text.x=ggplot2::element_blank()
-    ) + 
+      axis.ticks.y=ggplot2::element_blank(),
+      axis.text.x=ggplot2::element_blank(),
+      axis.line.y = ggplot2::element_line(linewidth = 0.5, linetype = "solid")
+   ) + 
     ggplot2::ggtitle("50th percentile")
   
   df$cases <- quantiles3$value
@@ -153,9 +155,10 @@ plot_percentile <- function(U = 373, Nsim=100, order="population", model = "li23
     ggplot2::labs(fill = "log10\n(Shenyang+1)") +
     ggplot2::theme(
       axis.text.y=ggplot2::element_blank(),
-      axis.ticks.y.left = element_blank(),
+      axis.ticks.y=ggplot2::element_blank(),
       panel.border=ggplot2::element_blank(),
-      legend.position = "bottom"
+      legend.position = "bottom",
+      axis.line.y = ggplot2::element_line(linewidth = 0.5, linetype = "solid")
     ) + 
     ggplot2::ggtitle("90th percentile")
 
