@@ -94,8 +94,9 @@ plot_percentile <- function(U = 373, Nsim=100, order="population", model = "li23
       axis.ticks.y=ggplot2::element_blank(),
       axis.text.x=ggplot2::element_blank(),
       axis.line.y = ggplot2::element_line(linewidth = 0.5, linetype = "solid")
-    ) + 
-    ggplot2::ggtitle("10th percentile")
+    ) +
+    ylab("City") +
+    ggplot2::ggtitle(expression("(A) "~10^{th}~percentile))
   
   df$cases <- quantiles2$value
   df$Wuhan[wuhan_index] <- df$cases[wuhan_index]
@@ -129,7 +130,8 @@ plot_percentile <- function(U = 373, Nsim=100, order="population", model = "li23
       axis.text.x=ggplot2::element_blank(),
       axis.line.y = ggplot2::element_line(linewidth = 0.5, linetype = "solid")
    ) + 
-    ggplot2::ggtitle("50th percentile")
+    ylab("City") +
+    ggplot2::ggtitle(expression("(B) "~50^{th}~percentile))
   
   df$cases <- quantiles3$value
   df$Wuhan[wuhan_index] <- df$cases[wuhan_index]
@@ -160,7 +162,9 @@ plot_percentile <- function(U = 373, Nsim=100, order="population", model = "li23
       legend.position = "bottom",
       axis.line.y = ggplot2::element_line(linewidth = 0.5, linetype = "solid")
     ) + 
-    ggplot2::ggtitle("90th percentile")
+    ylab("City") +
+    xlab("Day") +
+    ggplot2::ggtitle(expression("(C) "~90^{th}~percentile))
 
   
   panel_plot=plot1/plot2/plot3

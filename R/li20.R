@@ -679,7 +679,7 @@ li20 <- function(U = 373, dt = 1,
     lik = 0;
     for (u = 0; u < U; u++) {
       m = C[u];
-      v = m*m/4;
+      v = 0;
 
       if (cases[u] > m) {
 	  AA = pnorm(cases[u]-0.5,m,sqrt(v),0,1);
@@ -724,7 +724,7 @@ li20 <- function(U = 373, dt = 1,
 
     for (u = 0; u < U; u++) {
       m = C[u];
-      v = m*m/4;
+      v = 0;
 
       cases[u] = rnorm(m,sqrt(v));
       if (cases[u] > 0.0) {

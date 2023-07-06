@@ -1,11 +1,13 @@
 
-R version 4.3.0 (2023-04-21) -- "Already Tomorrow"
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
 Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: aarch64-apple-darwin20 (64-bit)
+Platform: x86_64-apple-darwin17.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -36,7 +38,7 @@ Loading required package: patchwork
 > obs(s)[1:3,1:5]
         date
 name     [,1] [,2] [,3] [,4] [,5]
-  cases1    0    2    3    8   10
+  cases1    0    2    5   10   17
   cases2    0    0    0    0    0
   cases3    0    0    0    0    0
 > 
@@ -77,9 +79,6 @@ name     [,1] [,2] [,3] [,4] [,5]
 > 
 > b <- bpfilter(p,block_size=1,Np=switch(i,10,100,1000))
 > logLik(b)
-[1] -3020.716
+[1] -3361.085
 > 
 > 
-> proc.time()
-   user  system elapsed 
-  1.283   0.315   3.301 
