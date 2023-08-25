@@ -1,6 +1,6 @@
-#' Build spatPomp object for li23
+#' Build spatPomp object for li23v4
 #'
-#' Generate a \sQuote{spatPomp} object for Covid in \code{U} cities in China.
+#' Generate a \sQuote{spatPomp} object for Covid in \code{U} cities in China, with new parameters R0 instead of Beta. It makes the latent and infectious periods constant before and after lockdown to rule out counter-intuitive fits.
 #'
 #' @param U A length-one numeric signifying the number of cities to be represented in the spatPomp object.
 #' @param dt step size, in days, for the euler approximation.
@@ -15,9 +15,9 @@
 #' @return An object of class \sQuote{spatPomp} representing a \code{U}-dimensional spatially coupled Covid POMP model.
 #'
 #' @export
-li23 <- function(U = 373, dt = 1/4,
-		   sharedOneInterval = c("theta","tau","sigma_SE","E_0","A_0"),
-                   sharedTwoInterval = c("alpha","Beta","mu","Z","D","Td"),
+li23v4 <- function(U = 373, dt = 1/4,
+		   sharedOneInterval = c("theta","tau","sigma_SE","E_0","A_0","Z","D"),
+                   sharedTwoInterval = c("alpha","R0","mu","Td"),
 		   version = c("MLEperiod3","li20period1","li20period2","li20period3"),
 		   mob_modify_factor = 20, days = 30, for_ibpf = T
 ) {
@@ -25,15 +25,13 @@ li23 <- function(U = 373, dt = 1/4,
     # mle from e3, loglik = -9200
     testPar <- c(
       alpha_be=0.1199543,
-      Beta_be=0.8053392,
+      R0_be=3.634827,
       alpha_af=0.4151188,
-      Beta_af=0.3441618, 
+      R0_af=1.33597, 
       mu_be=0.9700681,
-      Z_be=1.735166,
-      D_be=4.635517,
+      Z=1.735166,
+      D=4.635517,
       mu_af=0.7220044,
-      Z_af=1.536596,
-      D_af=2.714057,
       theta=1.752231,
       tau=0.3456199,
       sigma_SE=0.994764,
@@ -45,15 +43,13 @@ li23 <- function(U = 373, dt = 1/4,
   } else if(version[1] == "li20period3") {
     testPar <- c(
       alpha_be=0.14,
-      Beta_be=1.12,
+      R0_be=2.382363,
       mu_be=0.55,
-      Z_be=3.69,
-      D_be=3.47,
+      Z=3.69,
+      D=3.47,
       alpha_af=0.69,
-      Beta_af=0.35,
+      R0_af=0.953793,
       mu_af=0.43,
-      Z_af=3.42,
-      D_af=3.31,
       theta=1.36,
       tau=0.5,
       sigma_SE=0.78,
@@ -65,15 +61,13 @@ li23 <- function(U = 373, dt = 1/4,
   } else if(version[1] == "li20period2") {
     testPar <- c(
       alpha_be=0.14,
-      Beta_be=1.12,
+      R0_be=2.382363,
       mu_be=0.55,
-      Z_be=3.69,
-      D_be=3.47,
+      Z=3.69,
+      D=3.47,
       alpha_af=0.65,
-      Beta_af=0.52,
+      R0_af=1.34706,
       mu_af=0.5,
-      Z_af=3.6,
-      D_af=3.14,
       theta=1.36,
       tau=0.5,
       sigma_SE=0.78,
@@ -85,16 +79,14 @@ li23 <- function(U = 373, dt = 1/4,
   } else if(version[1] == "li20period1") {
     testPar <- c(
       alpha_be=0.14,
-      Beta_be=1.12,
+      R0_be=2.382363,
       mu_be=0.55,
-      Z_be=3.69,
-      D_be=3.47,
+      Z=3.69,
+      D=3.47,
       # period1 won't use _af, provide them to avoid an error
       alpha_af=0.69,
-      Beta_af=0.35,
+      R0_af=0.953793,
       mu_af=0.43,
-      Z_af=3.42,
-      D_af=3.31,
       theta=1.36,
       tau=0.5,
       sigma_SE=0.78,
@@ -107,8 +99,8 @@ li23 <- function(U = 373, dt = 1/4,
   
  
   
-  OneIntervalParNames <- c("theta","tau","sigma_SE","E_0","A_0")
-  TwoIntervalParNames <- c("alpha","Beta","mu","Z","D","Td")
+  OneIntervalParNames <- c("theta","tau","sigma_SE","E_0","A_0","Z","D")
+  TwoIntervalParNames <- c("alpha","R0","mu","Td")
   sharedParNames <- c(
     if(length(sharedTwoInterval)>0) c(paste0(sharedTwoInterval,"_be"),paste0(sharedTwoInterval,"_af")) else NULL,
     sharedOneInterval)
@@ -192,8 +184,8 @@ li23 <- function(U = 373, dt = 1/4,
 
   covid_rprocess <- spatPomp_Csnippet(
     unit_statenames=c('S','E','I','A','Ca','Cb','C'),
-    unit_paramnames=c("alpha_be","Beta_be","alpha_af","Beta_af","mu_be","Z_be",
-      "D_be","mu_af","Z_af","D_af","theta","Td_be","Td_af","sigma_SE"),
+    unit_paramnames=c("alpha_be","R0_be","alpha_af","R0_af","mu_be","Z",
+      "D","mu_af","theta","Td_be","Td_af","sigma_SE"),
     unit_covarnames=c('pop'),
     code='
       const int numTrans = 13; // number of transitions
@@ -202,7 +194,7 @@ li23 <- function(U = 373, dt = 1/4,
 //      |         |          |
 //   TS |      TE |      TA  |
 //      |         |          |
-//      +    SE   +   EA    +
+//      +    SE   +   EA     +
 //      S ------> E ------> A -----+ AR
 //      |         |  \       \ 
 //   ST |      ET |   \       \ 
@@ -228,10 +220,8 @@ li23 <- function(U = 373, dt = 1/4,
       int day = (int) t+1;  // day 1 corresponds to continuous time t in (0,1]
 
       const double* alpha = day<15 ? alpha_be : alpha_af;
-      const double* Beta = day<15 ? Beta_be : Beta_af;
+      const double* R0 = day<15 ? R0_be : R0_af;
       const double* mu = day<15 ? mu_be : mu_af;
-      const double* Z = day<15 ? Z_be : Z_af;
-      const double* D = day<15 ? D_be : D_af;
       const double* Td = day<15 ? Td_be : Td_af;
       
       for (u = 0 ; u < U ; u++) {
@@ -256,7 +246,7 @@ li23 <- function(U = 373, dt = 1/4,
         rate[ST] = (theta[theta_expand*u])*rate[ST];
         rate[ET] = (theta[theta_expand*u])*rate[ET];
         rate[AT] = (theta[theta_expand*u])*rate[AT];
-        rate[SE] = (Beta[Beta_expand*u]) * (I[u]+(mu[mu_expand*u])*A[u])/pop[u];
+        rate[SE] = (R0[R0_expand*u])/((D[D_expand*u])*(alpha[alpha_expand*u]+(1-alpha[alpha_expand*u])*mu[mu_expand*u])) * (I[u]+(mu[mu_expand*u])*A[u])/pop[u];
         rate[EI] = (alpha[alpha_expand*u])/(Z[Z_expand*u]);
         rate[EA] = (1-(alpha[alpha_expand*u]))/(Z[Z_expand*u]);
         rate[IR] = 1/(D[D_expand*u]);
@@ -299,8 +289,8 @@ li23 <- function(U = 373, dt = 1/4,
 
   covid_skel <- spatPomp_Csnippet(
     unit_vfnames=c('S','E','I','A','Ca','Cb','C'),
-    unit_paramnames=c("alpha_be","Beta_be","alpha_af","Beta_af","mu_be","Z_be",
-      "D_be","mu_af","Z_af","D_af","theta","Td_be","Td_af","sigma_SE"),
+    unit_paramnames=c("alpha_be","R0_be","alpha_af","R0_af","mu_be","Z",
+      "D","mu_af","theta","Td_be","Td_af","sigma_SE"),
     unit_covarnames=c('pop'),
     code='
       const double* S=&S1;
@@ -324,10 +314,8 @@ li23 <- function(U = 373, dt = 1/4,
       int day = (int) t+1;  // day 1 corresponds to continuous time t in (0,1]
 
       const double* alpha = day<15 ? alpha_be : alpha_af;
-      const double* Beta = day<15 ? Beta_be : Beta_af;
+      const double* R0 = day<15 ? R0_be : R0_af;
       const double* mu = day<15 ? mu_be : mu_af;
-      const double* Z = day<15 ? Z_be : Z_af;
-      const double* D = day<15 ? D_be : D_af;
       const double* Td = day<15 ? Td_be : Td_af;
       
       for (u = 0 ; u < U ; u++) {
@@ -352,7 +340,7 @@ li23 <- function(U = 373, dt = 1/4,
         rate[ST] = (theta[theta_expand*u])*rate[ST];
         rate[ET] = (theta[theta_expand*u])*rate[ET];
         rate[AT] = (theta[theta_expand*u])*rate[AT];
-        rate[SE] = (Beta[Beta_expand*u]) * (I[u]+(mu[mu_expand*u])*A[u])/pop[u];
+        rate[SE] = (R0[R0_expand*u])/((D[D_expand*u])*(alpha[alpha_expand*u]+(1-alpha[alpha_expand*u])*mu[mu_expand*u])) * (I[u]+(mu[mu_expand*u])*A[u])/pop[u];
         rate[EI] = (alpha[alpha_expand*u])/(Z[Z_expand*u]);
         rate[EA] = (1-(alpha[alpha_expand*u]))/(Z[Z_expand*u]);
         rate[IR] = 1/(D[D_expand*u]);
@@ -485,12 +473,10 @@ li23 <- function(U = 373, dt = 1/4,
         paste0("mu_af",seq(1,U))
       ),
       log=c(
-        paste0("Beta_be",seq(1,U)),
-        paste0("Beta_af",seq(1,U)),
-        paste0("Z_be",seq(1,U)),
-        paste0("Z_af",seq(1,U)),
-        paste0("D_be",seq(1,U)),
-        paste0("D_af",seq(1,U)),
+        paste0("R0_be",seq(1,U)),
+        paste0("R0_af",seq(1,U)),
+        paste0("Z",seq(1,U)),
+        paste0("D",seq(1,U)),
         paste0("Td_be",seq(1,U)),
         paste0("Td_af",seq(1,U)),
         paste0("theta",seq(1,U)),
@@ -509,12 +495,10 @@ li23 <- function(U = 373, dt = 1/4,
         paste0("mu_af",seq(1,ifelse("mu"%in%sharedTwoInterval,1,U)))
       ),
       log=c(
-        paste0("Beta_be",seq(1,ifelse("Beta"%in%sharedTwoInterval,1,U))),
-        paste0("Beta_af",seq(1,ifelse("Beta"%in%sharedTwoInterval,1,U))),
-        paste0("Z_be",seq(1,ifelse("Z"%in%sharedTwoInterval,1,U))),
-        paste0("Z_af",seq(1,ifelse("Z"%in%sharedTwoInterval,1,U))),
-        paste0("D_be",seq(1,ifelse("D"%in%sharedTwoInterval,1,U))),
-        paste0("D_af",seq(1,ifelse("D"%in%sharedTwoInterval,1,U))),
+        paste0("R0_be",seq(1,ifelse("R0"%in%sharedTwoInterval,1,U))),
+        paste0("R0_af",seq(1,ifelse("R0"%in%sharedTwoInterval,1,U))),
+        paste0("Z",seq(1,ifelse("Z"%in%sharedOneInterval,1,U))),
+        paste0("D",seq(1,ifelse("D"%in%sharedOneInterval,1,U))),
         paste0("Td_be",seq(1,ifelse("Td"%in%sharedTwoInterval,1,U))),
         paste0("Td_af",seq(1,ifelse("Td"%in%sharedTwoInterval,1,U))),
         paste0("theta",seq(1,ifelse("theta"%in%sharedOneInterval,1,U))),
