@@ -1,0 +1,108 @@
+
+R version 4.3.0 (2023-04-21) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> 
+> library(metapoppkg)
+Loading required package: pomp
+
+Welcome to pomp!
+
+As of version 4.6, no user-visible pomp function has a name that
+includes a dot ('.'). Function names have been changed to replace the
+dot with an underscore ('_'). For more information, see the pomp blog:
+https://kingaa.github.io/pomp/blog.html.
+
+Loading required package: spatPomp
+Loading required package: patchwork
+> i <- 1 # set to 2 for larger test, 3 for big test
+> 
+> DEBUG=FALSE
+> CHECK_LIK=TRUE
+> 
+> U=switch(i,5,20,373)
+> 
+> set.seed(99)
+> p <- li23v3(U=U)
+> s <- simulate(p)
+> obs(s)[1:3,1:5]
+        date
+name     [,1] [,2] [,3] [,4] [,5]
+  cases1    0    0    3   18   33
+  cases2    0    0    0    0    0
+  cases3    0    0    0    0    1
+> 
+> theta <- coef(p)
+> 
+> theta_trans <- partrans(p,theta,dir="toEst")
+> theta_trans
+   alpha_be1    alpha_be2    alpha_be3    alpha_be4    alpha_be5     Beta_be1 
+-1.992863001 -1.992863001 -1.992863001 -1.992863001 -1.992863001 -0.216491724 
+    Beta_be2     Beta_be3     Beta_be4     Beta_be5       mu_be1       mu_be2 
+-0.216491724 -0.216491724 -0.216491724 -0.216491724  3.478441474  3.478441474 
+      mu_be3       mu_be4       mu_be5       Td_be1       Td_be2       Td_be3 
+ 3.478441474  3.478441474  3.478441474  2.197224577  2.197224577  2.197224577 
+      Td_be4       Td_be5    alpha_af1    alpha_af2    alpha_af3    alpha_af4 
+ 2.197224577  2.197224577 -0.342844005 -0.342844005 -0.342844005 -0.342844005 
+   alpha_af5     Beta_af1     Beta_af2     Beta_af3     Beta_af4     Beta_af5 
+-0.342844005 -1.066643383 -1.066643383 -1.066643383 -1.066643383 -1.066643383 
+      mu_af1       mu_af2       mu_af3       mu_af4       mu_af5       Td_af1 
+ 0.954425947  0.954425947  0.954425947  0.954425947  0.954425947  1.791759469 
+      Td_af2       Td_af3       Td_af4       Td_af5       theta1       theta2 
+ 1.791759469  1.791759469  1.791759469  1.791759469  0.560889833  0.560889833 
+      theta3       theta4       theta5         tau1         tau2         tau3 
+ 0.560889833  0.560889833  0.560889833 -1.062415663 -1.062415663 -1.062415663 
+        tau4         tau5    sigma_SE1    sigma_SE2    sigma_SE3    sigma_SE4 
+-1.062415663 -1.062415663 -0.005249756 -0.005249756 -0.005249756 -0.005249756 
+   sigma_SE5         E_01         E_02         E_03         E_04         E_05 
+-0.005249756  6.839782708  6.839782708  6.839782708  6.839782708  6.839782708 
+        A_01         A_02         A_03         A_04         A_05           Z1 
+ 7.269578448  7.269578448  7.269578448  7.269578448  7.269578448  0.551103086 
+          Z2           Z3           Z4           Z5           D1           D2 
+ 0.551103086  0.551103086  0.551103086  0.551103086  1.533747735  1.533747735 
+          D3           D4           D5 
+ 1.533747735  1.533747735  1.533747735 
+> 
+> if(CHECK_LIK){
++   b <- bpfilter(p,block_size=1,Np=switch(i,10,100,1000))
++   cat("bpfilter loglik:",round(logLik(b),5),"\n")
++ }
+bpfilter loglik: -677.5125 
+> 
+> f <- flow(p,rinit(p))
+> 
+> 
+> round(f[c("C1","C2"),1,1:5],4)
+    date
+name   [,1]   [,2]    [,3]    [,4]    [,5]
+  C1 0.5478 3.9040 10.7222 21.1025 35.2826
+  C2 0.0034 0.0294  0.0994  0.2385  0.4776
+> 
+> 
+> if(DEBUG){
++   # plot to check that skeleton is close to a simulation
++   par(mfcol=c(2,1))
++   matplot(y=t(s@states[paste0("C",1:U),])+1,x=1:30,log="y",ty="l")
++   matplot(y=t(f[paste0("C",1:U),1,])+1,x=1:30,log="y",ty="l")
++ }
+> 
+> 
+>   
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  1.011   0.178   1.320 
