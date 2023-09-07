@@ -1,0 +1,55 @@
+
+R version 4.3.0 (2023-04-21) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(metapoppkg)
+Loading required package: pomp
+
+Welcome to pomp!
+
+As of version 4.6, no user-visible pomp function has a name that
+includes a dot ('.'). Function names have been changed to replace the
+dot with an underscore ('_'). For more information, see the pomp blog:
+https://kingaa.github.io/pomp/blog.html.
+
+Loading required package: spatPomp
+Loading required package: patchwork
+> ## R0 for mle
+> po_mle <- li23(U=5,version="MLEperiod3")
+> p_mle <- coef(po_mle)
+> R0(p_mle,be=T)
+[1] 3.634827
+> R0(p_mle,be=F)
+[1] 0.7821994
+> 
+> ## R0 for li20period2
+> po_li <- li23(U=5,version="li20period2")
+> p_li <- coef(po_li)
+> R0(p_li,be=T)
+[1] 2.382363
+> R0(p_li,be=F)
+[1] 1.34706
+> 
+> if(any(abs(c(R0(p_li,be=T),R0(p_li,be=F)) - c(2.38,1.34))>0.1)) stop("R0 not matching Li et al")
+> 
+> 
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  1.519   0.321   1.907 
