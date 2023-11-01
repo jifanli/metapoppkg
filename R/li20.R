@@ -1,6 +1,6 @@
 #' Build spatPomp object for li20
 #'
-#' Generate a \sQuote{spatPomp} object for reproducing the results of Li et al.
+#' Generate a \sQuote{spatPomp} object for reproducing the results of Li et al (2020). The results of Li et al (2023) use li23(), li23v2(), li23v3(), and li23v4(), not Li20(). 
 #'
 #' @param U A length-one numeric signifying the number of cities to be represented in the spatPomp object.
 #' @param dt step size, in days, for the euler approximation.

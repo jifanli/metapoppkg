@@ -376,10 +376,6 @@ li23 <- function(U = 373, dt = 1/4,
      }
   ')
 
-# We would like to remove tol at some point, and/or move
-# to a negative binomial model. vtol has an interpretation 
-# as a false positive rate, though number of false positives
-# will depend on number of tests and hence cases.
   covid_dmeasure <- Csnippet("
     const double *C = &C1;
     const double *cases = &cases1;  // reported infected
