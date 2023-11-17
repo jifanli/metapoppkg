@@ -43,10 +43,11 @@ par_li <- function(pars,unitOneInterval=NULL,unitTwoInterval=NULL,U,
     Z = c(2, 5),
     D = c(2, 5),
     Td = c(5, 10),
-    mu =c(0.2, 1),
+    mu = c(0.2, 1),
     E_0 = c(0,2000),
     A_0 = c(0,2000),
     sigma_SE = c(0,5),
+    tau = c(0,3),
     row.names=c("lo","hi")
   )
   liTransformed <- colnames(range)
@@ -66,6 +67,14 @@ par_li <- function(pars,unitOneInterval=NULL,unitTwoInterval=NULL,U,
     lo[nn] <- range["lo",p]
     hi[nn] <- range["hi",p]
   }
+  if("Beta" %in% unitTwoInterval){
+    nn <- paste0("Beta_be",1:U)
+    lo[nn] <- 0.8
+    hi[nn] <- 1.5
+    nn <- paste0("Beta_af",1:U)
+    lo[nn] <- 0.2
+    hi[nn] <- 1.2
+  }
   for(p in sharedOneInterval){
     nn <- paste0(p,1)
     lo[nn] <- range["lo",p]
@@ -75,6 +84,14 @@ par_li <- function(pars,unitOneInterval=NULL,unitTwoInterval=NULL,U,
     nn <- c(paste0(p,"_be",1),paste0(p,"_af",1))
     lo[nn] <- range["lo",p]
     hi[nn] <- range["hi",p]
+  }
+  if("Beta" %in% sharedTwoInterval){
+    nn <- paste0("Beta_be",1)
+    lo[nn] <- 0.8
+    hi[nn] <- 1.5
+    nn <- paste0("Beta_af",1)
+    lo[nn] <- 0.2
+    hi[nn] <- 1.2
   }
   if(dir[1]=="to_li"){
     if(any(pars<lo[names(pars)] | pars> hi[names(pars)])) stop(

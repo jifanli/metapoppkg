@@ -22,25 +22,25 @@ li23v2 <- function(U = 373, dt = 1/4,
 		   mob_modify_factor = 20, days = 30, for_ibpf = T
 ) {
   if(version[1] == "MLEperiod3") {
-    # mle from e3, loglik = -9200
+    # mle from l8, loglik = -9088
     testPar <- c(
-      alpha_be=0.1199543,
-      R0_be=3.634827,
-      alpha_af=0.4151188,
-      R0_af=0.7821994, 
-      mu_be=0.9700681,
-      Z_be=1.735166,
-      D_be=4.635517,
-      mu_af=0.7220044,
-      Z_af=1.536596,
-      D_af=2.714057,
-      theta=1.752231,
-      tau=0.3456199,
-      sigma_SE=0.994764,
+      alpha_be=9.656577e-02,
+      R0_be=12.36975,
+      alpha_af=5.410892e-01,
+      R0_af=0.5879895, 
+      mu_be=9.998998e-01,
+      Z_be=7.190778e-01,
+      D_be=1.722314e+01,
+      mu_af=8.676963e-01,
+      Z_af=1.929602,
+      D_af=2.314883,
+      theta=2.014716,
+      tau=2.967331e-01,
+      sigma_SE=2.148339,
       Td_be=9,
       Td_af=6,
-      E_0=934.2861,
-      A_0=1435.945
+      E_0=2.768051e+03,
+      A_0=9.899732e-01
     )
   } else if(version[1] == "li20period3") {
     testPar <- c(
@@ -376,10 +376,6 @@ li23v2 <- function(U = 373, dt = 1/4,
      }
   ')
 
-# We would like to remove tol at some point, and/or move
-# to a negative binomial model. vtol has an interpretation 
-# as a false positive rate, though number of false positives
-# will depend on number of tests and hence cases.
   covid_dmeasure <- Csnippet("
     const double *C = &C1;
     const double *cases = &cases1;  // reported infected

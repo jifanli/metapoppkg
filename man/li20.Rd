@@ -44,5 +44,5 @@ li20(
 An object of class \sQuote{spatPomp} representing a \code{U}-dimensional spatially coupled Covid POMP model.
 }
 \description{
-Generate a \sQuote{spatPomp} object for reproducing the results of Li et al.
+Generate a \sQuote{spatPomp} object for reproducing the results of Li et al (2020). The results of Li et al (2023) use li23(), li23v2(), li23v3(), and li23v4(), not Li20().
 }

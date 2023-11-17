@@ -25,7 +25,6 @@ population0[population0$City=="Shizuishan",2] <- 730400
 population0[population0$City=="Urumuqi",2] <- 4054000
 population0[population0$City=="Kelamayi",2] <- 462347
 
-# Maybe later I can write a function to make it shorter
 population0$City[population0$City=="Xintai"] <- "Xingtai"
 population0$City[population0$City=="Yinkou"] <- "Yingkou"
 population0$City[population0$City=="Zhaoyang"] <- "Chaoyang"
@@ -113,7 +112,7 @@ for (q in 2:15) {
 }
 
 dim(population)=c(15,U)
-popuaf = rep(population[15,],each=15) # we assume after the lockdown, there is no human movement
+popuaf = rep(population[15,],each=15) 
 dim(popuaf)=c(15,U)
 population=rbind(population,popuaf)
 dim(population)=c(30*U,1)

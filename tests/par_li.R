@@ -40,7 +40,7 @@ mle_test_params <- c(
                      D_af=0.126463381,
                      theta=0.89626861,
                      tau=0.917180577,
-                     sigma_SE=0.1348371, # when dt=1/4, size_SE=0.550023483, sigma_SE should be 5*0.1348371
+                     sigma_SE=0.1348371, 
                      Td_be=0.8,
                      Td_af=0.2,
                      E_0=0.44362243,

@@ -30,25 +30,25 @@ li20 <- function(U = 373, dt = 1,
                  measurement = "simulation"
                  ) {
   if(version[1] == "MLEperiod3") {
-    # mle from e3, loglik = -9200
+    # mle from l8, loglik = -9088
     testPar <- c(
-      alpha_be1=0.1199543,
-      Beta_be1=0.8053392,
-      alpha_af1=0.4151188,
-      Beta_af1=0.3441618, 
-      mu_be1=0.9700681,
-      Z_be1=1.735166,
-      D_be1=4.635517,
-      mu_af1=0.7220044,
-      Z_af1=1.536596,
-      D_af1=2.714057,
-      theta1=1.752231,
-      tau1=0.3456199,
-      sigma_SE1=0.994764,
+      alpha_be1=9.656577e-02,
+      Beta_be1=7.182705e-01,
+      alpha_af1=5.410892e-01,
+      Beta_af1=2.704229e-01, 
+      mu_be1=9.998998e-01,
+      Z_be1=7.190778e-01,
+      D_be1=1.722314e+01,
+      mu_af1=8.676963e-01,
+      Z_af1=1.929602,
+      D_af1=2.314883,
+      theta1=2.014716,
+      tau1=2.967331e-01,
+      sigma_SE1=2.148339,
       Td_be1=9,
       Td_af1=6,
-      E_01=934.2861,
-      A_01=1435.945
+      E_01=2.768051e+03,
+      A_01=9.899732e-01
     )
   } else if(version[1] == "li20period3") {
     testPar <- c(
@@ -316,27 +316,43 @@ li20 <- function(U = 373, dt = 1,
         }
       }
       
-      trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*S[u]/pop[u]*I[u]*dt;
-      trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*S[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*A[u]*dt;
-      trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
-      trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(S[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : S[u]*dt;        
-      trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*E[u]/(2+3*Z_be[Z_be_expand*u])*dt;
-      trans[6] = (1-(0.02+0.98*alpha_be[alpha_be_expand*u]))*E[u]/(2+3*Z_be[Z_be_expand*u])*dt;
-      trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
-      trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(E[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : E[u]*dt;
-      trans[9] = I[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[10] = A[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
-      trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(A[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : A[u]*dt;
-      trans[13] = Ca[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
-      trans[14] = Cb[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+      if(day<15){
+        trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*S[u]/pop[u]*I[u]*dt;
+        trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*S[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*A[u]*dt;
+        trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
+        trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(S[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : S[u]*dt;        
+        trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*E[u]/(2+3*Z_be[Z_be_expand*u])*dt;
+        trans[6] = (1-(0.02+0.98*alpha_be[alpha_be_expand*u]))*E[u]/(2+3*Z_be[Z_be_expand*u])*dt;
+        trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
+        trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(E[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : E[u]*dt;
+        trans[9] = I[u]/(2+3*D_be[D_be_expand*u])*dt;
+        trans[10] = A[u]/(2+3*D_be[D_be_expand*u])*dt;
+        trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
+        trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(A[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : A[u]*dt;
+        trans[13] = Ca[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+        trans[14] = Cb[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+      } else {
+        trans[1] = (0.2+Beta_af[Beta_af_expand*u])*S[u]/pop[u]*I[u]*dt;
+        trans[2] = (0.2+Beta_af[Beta_af_expand*u])*S[u]/pop[u]*(0.2+0.8*mu_af[mu_af_expand*u])*A[u]*dt;
+        trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
+        trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(S[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : S[u]*dt;        
+        trans[5] = (0.02+0.98*alpha_af[alpha_af_expand*u])*E[u]/(2+3*Z_af[Z_af_expand*u])*dt;
+        trans[6] = (1-(0.02+0.98*alpha_af[alpha_af_expand*u]))*E[u]/(2+3*Z_af[Z_af_expand*u])*dt;
+        trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
+        trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(E[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : E[u]*dt;
+        trans[9] = I[u]/(2+3*D_af[D_af_expand*u])*dt;
+        trans[10] = A[u]/(2+3*D_af[D_af_expand*u])*dt;
+        trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
+        trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(A[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : A[u]*dt;
+        trans[13] = Ca[u]*2/(5+5*Td_af[Td_af_expand*u])*dt;
+        trans[14] = Cb[u]*2/(5+5*Td_af[Td_af_expand*u])*dt;
+      }
       for (w=1; w < 15 ; w++) {
         trans[w] = trans[w]>0 ? trans[w] : 0;
       }
       if (overdispersion_dynamic>0.5){
         trans[1] = rpois(trans[1]*rgammawn(5*sigma_SE[sigma_SE_expand*u],dt)/dt);
         trans[2] = rpois(trans[2]*rgammawn(5*sigma_SE[sigma_SE_expand*u],dt)/dt);
-      // Rprintf("test if loop is run"); It has been tested, when overdispersion_dynamic = F, the loop will not be run
       } else {
         trans[1] = rpois(trans[1]);
         trans[2] = rpois(trans[2]);
@@ -406,20 +422,38 @@ li20 <- function(U = 373, dt = 1,
           }
         }
       }
-      trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsa[u]/pop[u]*Tisa[u]*dt;
-      trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsa[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*Tiaa[u]*dt;
-      trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
-      trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsa[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsa[u]*dt;
-      trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*Tea[u]/(2+3*Z_be[Z_be_expand*u])*dt;
-      trans[6] = (1-(0.02+0.98*alpha_be[alpha_be_expand*u]))*Tea[u]/(2+3*Z_be[Z_be_expand*u])*dt;
-      trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
-      trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Tea[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Tea[u]*dt;
-      trans[9] = Tisa[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[10] = Tiaa[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
-      trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiaa[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiaa[u]*dt;
-      trans[13] = Tcaa[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
-      trans[14] = Tcba[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+      if(day<15){
+        trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsa[u]/pop[u]*Tisa[u]*dt;
+        trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsa[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*Tiaa[u]*dt;
+        trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
+        trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsa[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsa[u]*dt;
+        trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*Tea[u]/(2+3*Z_be[Z_be_expand*u])*dt;
+        trans[6] = (1-(0.02+0.98*alpha_be[alpha_be_expand*u]))*Tea[u]/(2+3*Z_be[Z_be_expand*u])*dt;
+        trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
+        trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Tea[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Tea[u]*dt;
+        trans[9] = Tisa[u]/(2+3*D_be[D_be_expand*u])*dt;
+        trans[10] = Tiaa[u]/(2+3*D_be[D_be_expand*u])*dt;
+        trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
+        trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiaa[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiaa[u]*dt;
+        trans[13] = Tcaa[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+        trans[14] = Tcba[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+      } else {
+        trans[1] = (0.2+Beta_af[Beta_af_expand*u])*Tsa[u]/pop[u]*Tisa[u]*dt;
+        trans[2] = (0.2+Beta_af[Beta_af_expand*u])*Tsa[u]/pop[u]*(0.2+0.8*mu_af[mu_af_expand*u])*Tiaa[u]*dt;
+        trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
+        trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsa[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsa[u]*dt;
+        trans[5] = (0.02+0.98*alpha_af[alpha_af_expand*u])*Tea[u]/(2+3*Z_af[Z_af_expand*u])*dt;
+        trans[6] = (1-(0.02+0.98*alpha_af[alpha_af_expand*u]))*Tea[u]/(2+3*Z_af[Z_af_expand*u])*dt;
+        trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
+        trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Tea[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Tea[u]*dt;
+        trans[9] = Tisa[u]/(2+3*D_af[D_af_expand*u])*dt;
+        trans[10] = Tiaa[u]/(2+3*D_af[D_af_expand*u])*dt;
+        trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
+        trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiaa[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiaa[u]*dt;
+        trans[13] = Tcaa[u]*2/(5+5*Td_af[Td_af_expand*u])*dt;
+        trans[14] = Tcba[u]*2/(5+5*Td_af[Td_af_expand*u])*dt;
+      }
+      
       for (w=1; w < 15 ; w++) {
         trans[w] = trans[w]>0 ? trans[w] : 0;
       }
@@ -496,20 +530,37 @@ li20 <- function(U = 373, dt = 1,
         }
       }
 
-      trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsb[u]/pop[u]*Tisb[u]*dt;
-      trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsb[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*Tiab[u]*dt;
-      trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
-      trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsb[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsb[u]*dt;
-      trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*Teb[u]/(2+3*Z_be[Z_be_expand*u])*dt;
-      trans[6] = (1-(0.02+0.98*alpha_be[alpha_be_expand*u]))*Teb[u]/(2+3*Z_be[Z_be_expand*u])*dt;
-      trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
-      trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Teb[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Teb[u]*dt;
-      trans[9] = Tisb[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[10] = Tiab[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
-      trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiab[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiab[u]*dt;
-      trans[13] = Tcab[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
-      trans[14] = Tcbb[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+      if(day<15){
+        trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsb[u]/pop[u]*Tisb[u]*dt;
+        trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsb[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*Tiab[u]*dt;
+        trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
+        trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsb[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsb[u]*dt;
+        trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*Teb[u]/(2+3*Z_be[Z_be_expand*u])*dt;
+        trans[6] = (1-(0.02+0.98*alpha_be[alpha_be_expand*u]))*Teb[u]/(2+3*Z_be[Z_be_expand*u])*dt;
+        trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
+        trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Teb[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Teb[u]*dt;
+        trans[9] = Tisb[u]/(2+3*D_be[D_be_expand*u])*dt;
+        trans[10] = Tiab[u]/(2+3*D_be[D_be_expand*u])*dt;
+        trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
+        trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiab[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiab[u]*dt;
+        trans[13] = Tcab[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+        trans[14] = Tcbb[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+      } else {
+        trans[1] = (0.2+Beta_af[Beta_af_expand*u])*Tsb[u]/pop[u]*Tisb[u]*dt;
+        trans[2] = (0.2+Beta_af[Beta_af_expand*u])*Tsb[u]/pop[u]*(0.2+0.8*mu_af[mu_af_expand*u])*Tiab[u]*dt;
+        trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
+        trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsb[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsb[u]*dt;
+        trans[5] = (0.02+0.98*alpha_af[alpha_af_expand*u])*Teb[u]/(2+3*Z_af[Z_af_expand*u])*dt;
+        trans[6] = (1-(0.02+0.98*alpha_af[alpha_af_expand*u]))*Teb[u]/(2+3*Z_af[Z_af_expand*u])*dt;
+        trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
+        trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Teb[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Teb[u]*dt;
+        trans[9] = Tisb[u]/(2+3*D_af[D_af_expand*u])*dt;
+        trans[10] = Tiab[u]/(2+3*D_af[D_af_expand*u])*dt;
+        trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
+        trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiab[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiab[u]*dt;
+        trans[13] = Tcab[u]*2/(5+5*Td_af[Td_af_expand*u])*dt;
+        trans[14] = Tcbb[u]*2/(5+5*Td_af[Td_af_expand*u])*dt;
+      }
       for (w=1; w < 15 ; w++) {
         trans[w] = trans[w]>0 ? trans[w] : 0;
       }
@@ -585,20 +636,37 @@ li20 <- function(U = 373, dt = 1,
           }
         }
       }
-      trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsc[u]/pop[u]*Tisc[u]*dt;
-      trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsc[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*Tiac[u]*dt;
-      trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
-      trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsc[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsc[u]*dt;
-      trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*Tec[u]/(2+3*Z_be[Z_be_expand*u])*dt;
-      trans[6] = (1-(0.02+0.98*alpha_be[alpha_be_expand*u]))*Tec[u]/(2+3*Z_be[Z_be_expand*u])*dt;
-      trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
-      trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Tec[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Tec[u]*dt;
-      trans[9] = Tisc[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[10] = Tiac[u]/(2+3*D_be[D_be_expand*u])*dt;
-      trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
-      trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiac[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiac[u]*dt;
-      trans[13] = Tcac[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
-      trans[14] = Tcbc[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+      if(day<15){
+        trans[1] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsc[u]/pop[u]*Tisc[u]*dt;
+        trans[2] = (0.8+0.7*Beta_be[Beta_be_expand*u])*Tsc[u]/pop[u]*(0.2+0.8*mu_be[mu_be_expand*u])*Tiac[u]*dt;
+        trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
+        trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsc[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsc[u]*dt;
+        trans[5] = (0.02+0.98*alpha_be[alpha_be_expand*u])*Tec[u]/(2+3*Z_be[Z_be_expand*u])*dt;
+        trans[6] = (1-(0.02+0.98*alpha_be[alpha_be_expand*u]))*Tec[u]/(2+3*Z_be[Z_be_expand*u])*dt;
+        trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
+        trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Tec[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Tec[u]*dt;
+        trans[9] = Tisc[u]/(2+3*D_be[D_be_expand*u])*dt;
+        trans[10] = Tiac[u]/(2+3*D_be[D_be_expand*u])*dt;
+        trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
+        trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiac[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiac[u]*dt;
+        trans[13] = Tcac[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+        trans[14] = Tcbc[u]*2/(5+5*Td_be[Td_be_expand*u])*dt;
+      } else {
+        trans[1] = (0.2+Beta_af[Beta_af_expand*u])*Tsc[u]/pop[u]*Tisc[u]*dt;
+        trans[2] = (0.2+Beta_af[Beta_af_expand*u])*Tsc[u]/pop[u]*(0.2+0.8*mu_af[mu_af_expand*u])*Tiac[u]*dt;
+        trans[3] = (1+0.75*theta[theta_expand*u])*uc*dt;
+        trans[4] = ((1+0.75*theta[theta_expand*u])*ud*dt)<(Tsc[u]*dt) ? (1+0.75*theta[theta_expand*u])*ud*dt : Tsc[u]*dt;
+        trans[5] = (0.02+0.98*alpha_af[alpha_af_expand*u])*Tec[u]/(2+3*Z_af[Z_af_expand*u])*dt;
+        trans[6] = (1-(0.02+0.98*alpha_af[alpha_af_expand*u]))*Tec[u]/(2+3*Z_af[Z_af_expand*u])*dt;
+        trans[7] = (1+0.75*theta[theta_expand*u])*ug*dt;
+        trans[8] = ((1+0.75*theta[theta_expand*u])*uh*dt)<(Tec[u]*dt) ? (1+0.75*theta[theta_expand*u])*uh*dt : Tec[u]*dt;
+        trans[9] = Tisc[u]/(2+3*D_af[D_af_expand*u])*dt;
+        trans[10] = Tiac[u]/(2+3*D_af[D_af_expand*u])*dt;
+        trans[11] = (1+0.75*theta[theta_expand*u])*uk*dt;
+        trans[12] = ((1+0.75*theta[theta_expand*u])*ul*dt)<(Tiac[u]*dt) ? (1+0.75*theta[theta_expand*u])*ul*dt : Tiac[u]*dt;
+        trans[13] = Tcac[u]*2/(5+5*Td_af[Td_af_expand*u])*dt;
+        trans[14] = Tcbc[u]*2/(5+5*Td_af[Td_af_expand*u])*dt;
+      }
       for (w=1; w < 15 ; w++) {
         trans[w] = trans[w]>0 ? trans[w] : 0;
       }

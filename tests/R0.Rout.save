@@ -7,8 +7,6 @@ R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
 
-  Natural language support but running in an English locale
-
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
 'citation()' on how to cite R or R packages in publications.
@@ -33,9 +31,9 @@ Loading required package: patchwork
 > po_mle <- li23(U=5,version="MLEperiod3")
 > p_mle <- coef(po_mle)
 > R0(p_mle,be=T)
-[1] 3.634827
+[1] 12.36975
 > R0(p_mle,be=F)
-[1] 0.7821994
+[1] 0.5879896
 > 
 > ## R0 for li20period2
 > po_li <- li23(U=5,version="li20period2")
@@ -52,3 +50,6 @@ Loading required package: patchwork
 > 
 > 
 > 
+> proc.time()
+   user  system elapsed 
+  1.551   0.314   1.823 
