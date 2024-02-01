@@ -1,14 +1,12 @@
 Package: metapoppkg
 Title: R Package for Metapop Article
-Version: 0.1.16
-Date: 2023-11-16
+Version: 0.1.17
+Date: 2024-02-01
 Authors@R: c(
   person("Jifan", "Li", email = "jifanli@umich.edu", role = c("cre","aut")),
   person("Edward", "Ionides", email = "ionides@umich.edu",role = c("aut")),
   person("Ning", "Ning", email = "patning@tamu.edu",role = c("aut")))
-Description: This package is a container for the data and functions that were 
-    used to write the article Metapopulation modeling and inference for 
-    scientific discovery.
+Description: Data and functions used to write the article "Inference on spatiotemporal dynamics for networks of biological populations" by Li, Ionides, King, Pascual and Ning. See https://arxiv.org/abs/2311.06702.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -26,4 +24,4 @@ Imports:
     foreach,
     stats,
     dplyr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
