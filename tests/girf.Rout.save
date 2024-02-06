@@ -1,7 +1,7 @@
 
-R version 4.3.0 (2023-04-21) -- "Already Tomorrow"
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
 Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: aarch64-apple-darwin20 (64-bit)
+Platform: x86_64-apple-darwin17.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -36,13 +36,13 @@ Loading required package: patchwork
 > set.seed(530)
 > bg1 <- girf(m1,kind="bootstrap",Np=20,Ninter=2,Nguide=10,lookahead=1,tol=1e-5)
 > round(logLik(bg1),4)
-[1] -9.2416
+[1] -8.7601
 > 
 > # test moment girf
 > set.seed(531)
 > mg1 <- girf(m1,kind="moment",Np=20,Ninter=2,Nguide=10,lookahead=1,tol=1e-5)
 > round(logLik(mg1),4)
-[1] -9.0508
+[1] -9.2747
 > 
 > 
 > 

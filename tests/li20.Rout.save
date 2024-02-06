@@ -1,11 +1,13 @@
 
-R version 4.3.0 (2023-04-21) -- "Already Tomorrow"
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
 Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: aarch64-apple-darwin20 (64-bit)
+Platform: x86_64-apple-darwin17.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -67,9 +69,9 @@ name     [,1] [,2] [,3] [,4] [,5]
      Td_be1      Td_be2      Td_be3      Td_be4      Td_be5      Td_af1 
  1.38629436  1.38629436  1.38629436  1.38629436  1.38629436 -1.38629436 
      Td_af2      Td_af3      Td_af4      Td_af5   sigma_SE1   sigma_SE2 
--1.38629436 -1.38629436 -1.38629436 -1.38629436 -2.19722458 -2.19722458 
+-1.38629436 -1.38629436 -1.38629436 -1.38629436        -Inf        -Inf 
   sigma_SE3   sigma_SE4   sigma_SE5        E_01        E_02        E_03 
--2.19722458 -2.19722458 -2.19722458  0.00000000  0.00000000  0.00000000 
+       -Inf        -Inf        -Inf  0.00000000  0.00000000  0.00000000 
        E_04        E_05        A_01        A_02        A_03        A_04 
  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000 
        A_05 
@@ -80,6 +82,3 @@ name     [,1] [,2] [,3] [,4] [,5]
 [1] -1903.044
 > 
 > 
-> proc.time()
-   user  system elapsed 
-  1.346   0.324   1.822 
